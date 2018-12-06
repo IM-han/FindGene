@@ -1,0 +1,66 @@
+{% extends "base-left.html" %}
+{% load staticfiles %}
+{% block title %}FindGene{% endblock %}
+
+{% block content %}
+
+    <!-- Main content -->
+  <section class="content-header">
+    <h1>关于系统</h1>
+    <ol class="breadcrumb">
+        <li><a href="#"><i class="fa fa-dashboard"></i> 凡迪报告管理系统 </a> </li>
+        <li><a href="{% url 'system' %}">关于系统</a> </li>
+    </ol>
+
+  </section>
+
+    <!-- /.content -->
+    <div class="pad margin no-print">
+        <div class="callout callout-info" style="margin-bottom: 0!important;">
+            <h4><i class="fa fa-info-circle"></i> 提示信息：</h4>
+            系统模块用于修改系统配置，包括：用户管理、权限管理、参数设置等。
+        </div>
+    </div>
+    <!-- Main content-->
+    <section class="invoice">
+    <!-- title -->
+    <div class="row">
+        <div class="col-xs-12">
+            <h2 class="page-header">
+                <i class="fa fa-globe"></i> FindGene
+            </h2>
+        </div>
+    </div>
+    <!-- info row -->
+    <div class="row invoice-info">
+        <div class="col-sm-4 invoice-col">
+            <b>公司愿景</b>
+            <p>检测基因，关爱未来，让世界不再缺陷！</p>
+        </div>
+        <div class="col-sm-4 invoice-col">
+            <b>公司文化</b>
+            <p>
+                产品：不断研发<br>
+                质量：不断优化，降低成本<br>
+                模式：不断探索，模式创新<br>
+                服务：不断改善，提高满意度<br>
+                行销力：不断拓宽，做强直销与做大分销渠道<br>
+            </p>
+        </div>
+        <div class="col-sm-4 invoice-col">
+            <b>技术支持</b>
+            <p>
+                部门：生物信息部<br>
+                邮箱：bioinfo@findgene.com
+            </p>
+            <p>版本：Version 2.0</p>
+        </div>
+    </div>
+    </section>
+
+{% endblock %}
+
+
+{% block javascripts %}
+
+{% endblock %}
