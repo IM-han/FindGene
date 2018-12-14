@@ -1,0 +1,95 @@
+{% extends 'base-layer.html' %}
+{% load staticfiles %}
+
+{% block css %}
+    <link rel="stylesheet" href="{% static 'plugins/select2/select2.min.css' %}">
+    <link rel="stylesheet" href="{% static 'js/plugins/layer/skin/layer.css' %}">
+    <link rel="stylesheet" href="{% static 'bootstrap/css/bootstrap-datetimepicker.min.css' %}">
+{% endblock %}
+
+{% block main %}
+<div class="box box-danger">
+<form class="form-horizontal" id="addForm" method="post">
+    {% csrf_token %}
+    <input type="hidden" name="proposer" value="{{ request.user.id }}">
+    <div class="box-body">
+        <fieldset>
+            <div class="form-group has-feedback">
+                <label class="col-sm-2 control-label"><strong style="color:#F00">*</strong> 样本编号</label>
+                <div class="col-sm-3">
+                    <input class="form-control" name="sample_number"  value="{{ NIPTImportData.sample_number }}" type="text">
+                </div>
+                <label class="col-sm-2 control-label"><strong style="color:#F00">*</strong>报告地区</label>
+                <div class="col-sm-3">
+                    <select class="form-control select2" style="width: 100%;" name="report_area">
+                        <option value="{{ NIPTImportData.report_area }}">
+                            {{ NIPTImportData.get_report_area_display }}
+                        </option>
+                        {% for area in area_list %}
+                            <option value="{{ area.item }}">{{ area.value }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+            </div>
+            <div class="form-group has-feedback">
+                <label class="col-sm-2 control-label"><strong style="color:#F00">*</strong>检测结果</label>
+                <div class="col-sm-3">
+                    <select class="form-control select2" style="width: 100%;" name="report_result">
+                        <option value="{{ NIPTImportData.result }}">
+                            {{ NIPTImportData.get_result_display }}
+                        </option>
+                        {% for result in result_list %}
+                            <option value="{{ result.item }}">{{ result.value }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+                <label class="col-sm-2 control-label"><strong style="color:#F00">*</strong>T13</label>
+                <div class="col-sm-3">
+                    <input class="form-control" name="T13"  value="{{ NIPTImportData.T13 }}" type="text">
+                </div>
+            </div>
+            <div class="form-group has-feedback">
+                <label class="col-sm-2 control-label"><strong style="color:#F00">*</strong>T18</label>
+                <div class="col-sm-3">
+                    <input class="form-control" name="T18"  value="{{ NIPTImportData.T18 }}" type="text">
+                </div>
+                <label class="col-sm-2 control-label"><strong style="color:#F00">*</strong>T21</label>
+                <div class="col-sm-3">
+                    <input class="form-control" name="T21"  value="{{ NIPTImportData.T21 }}" type="text">
+                </div>
+            </div>
+            <div class="form-group has-feedback">
+                <label class="col-sm-2 control-label"><strong style="color:#F00">*</strong>报告时间</label>
+                <div class="col-sm-3">
+                    <input type="text" class="form-control pull-right form_datetime" name="date_report" value="{{ NIPTImportData.date_report |date: 'Y-m-d H:m:s' }}">
+                </div>
+                <label class="col-sm-2 control-label"><strong style="color:#F00">*</strong>采血时间</label>
+                <div class="col-sm-3">
+                    <input type="text" class="form-control pull-right form_datetime" name="date_blood" value="{{ NIPTImportData.date_blood |date: 'Y-m-d H:m:s' }}">
+                </div>
+            </div>
+            <div class="form-group has-feedback">
+                <label class="col-sm-2 control-label"><strong style="color:#F00">*</strong>孕妇姓名</label>
+                <div class="col-sm-3">
+                    <input class="form-control" name="name"  value="{{ NIPTImportData.name }}" type="text">
+                </div>
+                <label class="col-sm-2 control-label"><strong style="color:#F00">*</strong>孕妇年龄</label>
+                <div class="col-sm-3">
+                    <input class="form-control" name="age"  value="{{ NIPTImportData.age }}" type="text">
+                </div>
+            </div>
+            <div class="form-group has-feedback">
+                <label class="col-sm-2 control-label">孕周</label>
+                <div class="col-sm-3">
+                    <input class="form-control" name="gestation_weeks" value="{{ NIPTImport.gestation_weeks }}" type="text">
+                </div>
+                <label class="col-sm-2 control-label">末次月经</label>
+                <div class="col-sm-3">
+                    <input type="text" class="form-control pull-right form_datetime" name="date_blood" value="{{ NIPTImportData.last_menstrual |date: 'Y-m-d H:m:s' }}">
+                </div>
+            </div>
+        </fieldset>
+    </div>
+</form>
+</div>
+{% endblock %}
