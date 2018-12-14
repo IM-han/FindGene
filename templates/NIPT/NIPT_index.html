@@ -59,10 +59,10 @@
                 <div class="box-body">
                     <div class="row">
                         <div class="col-md-8">
-                            <div id="bar_container" style="height: 400px;"></div>
+                            <div id="bar_container" style="height: 550px;"></div>
                         </div>
                         <div class="col-md-4">
-                            <div id="pie_container" style="height: 400px;"></div>
+                            <div id="pie_container" style="height: 550px;"></div>
                         </div>
                     </div>
                 </div>
@@ -116,5 +116,57 @@
     if (option && typeof option === "object"){
         myBarChart.setOption(option, true);
     }
+
+    //echarts bar
+    var pie_dom = document.getElementById("pie_container");
+    var myPieChart = echarts.init(pie_dom);
+    option = null;
+    option = {
+        title: {
+            text: '年度样本比例',
+            subtext: '',
+            x: 'center'
+        },
+        tooltip: {
+            trigger: 'item',
+            formatter: "{a} <br/>{b}:{c} ({d}%)"
+        },
+        toolbox: {
+            show: true,
+            feature: {
+                saveAsImage: {show: true}
+            }
+        },
+        legend: {
+            orient: 'vertical',
+            left: 'left',
+            data: ['Jan','Feb','Mar','Apr','May']
+        },
+        series: [
+            {
+                name: '年度样本统计',
+                type: 'pie',
+                center: ['50%', '60%'],
+                data:[{name:'Jan',value:100},{name:'Feb',value:200},{name:'Mar',value:300},{name:'Apr',value:400},{name:'May',value:'500'}],
+                itemStyple: {
+                    emphasis: {
+                        shadowBlur: 10,
+                        shadowOffsetX: 0,
+                        shadowColor: 'rgba(0,0,0,0.5)'
+                    }
+                }
+            }
+        ]
+
+    };
+    if (option && typeof option === "object"){
+        myPieChart.setOption(option, true);
+    }
+
+    //图标窗体自适应
+    $(widow).resize(function(){
+        myBarChart.resize();
+        myPieChart.resize();
+    })
     </script>
 {% endblock %}

@@ -21,7 +21,8 @@ from django.urls import re_path
 from django.views.static import serve
 from system.views import SystemView
 from NIPT.views import NIPTView
-
+from NIPT.views import NIPTDataImportView
+from NIPT.views import NIPTDataImportTableView
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('', IndexView.as_view(), name='index'),
@@ -29,6 +30,8 @@ urlpatterns = [
     path('logout/', LogoutView.as_view(), name='logout'),
     path('system/', SystemView.as_view(), name='system'),
     path('NIPT/', NIPTView.as_view(), name='NIPT'),
+    path('NIPT/DataImport/', NIPTDataImportView.as_view(), name='NIPT_DataImport'),
+    path('NIPT/DataImport/DataTable', NIPTDataImportTableView.as_view(), name='NIPT_DataTable'),
 ]
 
 if settings.DEBUG:

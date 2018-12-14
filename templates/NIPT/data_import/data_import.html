@@ -1,0 +1,286 @@
+{% extends "base-left.html" %}
+{% load staticfiles %}
+
+{% block css %}
+    <link rel="stylesheet" href="{% static 'plugins/datatables/jquery.dataTables.min.css' %}">
+    <link rel="stylesheet" href="{% static 'js/plugins/layer/skin/layer.css' %}">
+    <link rel="stylesheet" href="{% static 'plugins/select2/select2.min.css' %}">
+{% endblock %}
+
+{% block content %}
+    <!-- content header -->
+    <section class="content-header margin-bottom">
+    <ol class="breadcrumb">
+        <li><a href=""><i class="fa fa-dashboard"></i>凡迪基因报告管理系统 </a> </li>
+        <li class="active"><a href="{% url 'NIPT' %}">NIPT</a> </li>
+        <li class="active"><a href="{% url 'NIPT_DataImport' %}">数据导入</a> </li>
+    </ol>
+    </section>
+
+    <!-- Main content -->
+    <section class="content">
+    <div id="devlist">
+        <div class="box box-primary" id="liebiao">
+            <div class="box-header">
+                    <button type="button" class="btn btn-default" data-toggle="modal" data-target="#modal_uptext">
+                        <span class="glyphicon glyphicon-import"></span>导入数据
+                    </button>
+                    <button type="button" id="btnCheck" class="btn btn-default">
+                        <i class="glyphicon glyphicon-ok-sign"></i>数据确认
+                    </button>
+                    <button type="button" class="btn btn-default">
+                        <i class="glyphicon glyphicon-upload"></i>导出模板
+                    </button>
+                    <button type="button" id="btnCreate" class="btn btn-default">
+                        <i class="glyphicon glyphicon-plus"></i>新建
+                    </button>
+                    <button type="button" id="btnModification" class="btn btn-default">
+                        <i class="glyphicon glyphicon-pencil"></i>修改
+                    </button>
+
+                    <button type="button" id="btnRemove" class="btn btn-default">
+                        <i class="glyphicon glyphicon-remove"></i>删除
+                    </button>
+
+                    <button type="button" id="btnSearch" class="btn btn-default">
+                        <i class="glyphicon glyphicon-search"></i>查询
+                    </button>
+                    <button type="button" id="btnRefresh" class="btn btn-default">
+                        <i class="glyphicon glyphicon-refresh"></i>刷新
+                    </button>
+
+            </div>
+            <div class="box-body">
+                <table id="dtbList" class="display" cellspacing="0" width="100%">
+                    <thead>
+                    <tr valign="middle">
+                        <th><input type="checkbox" id="checkAll"></th>
+                        <th>ID</th>
+                        <th>样本编号</th>
+                        <th>姓名</th>
+                        <th>采血日期</th>
+                        <th>年龄</th>
+                        <th>孕周</th>
+                        <th>末次月经</th>
+                        <th>单胎/多胎</th>
+                        <th>试管婴儿</th>
+                        <th>联系方式</th>
+                        <th>送检医院</th>
+                        <th>医生</th>
+                        <th>省区</th>
+                        <th>备注</th>
+                        <th>报告地区</th>
+                        <th>T13</th>
+                        <th>T18</th>
+                        <th>T21</th>
+                        <th>检测结果</th>
+                        <th>报告时间</th>
+                        <th>报告状态</th>
+                        <th>导入人员</th>
+                        <th>导入时间</th>
+
+                    </tr>
+                    </thead>
+                </table>
+            </div>
+
+        </div>
+    </div>
+    <!--导入数据页面选择-->
+    <div class="modal fade" id="modal_uptext" tabindex="-1" role="dialog" aria-hidden="true" data-backdrop="static">
+        <div class="modal-dialog modal-md">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                    <h4><span class="glyphicon glyphicon-question-sign">请选择</span> </h4>
+                </div>
+                <div class="modal-body">
+                    <nav class="nav" style="background-color: #f7f7f7;">
+                        <ul class="nav navbar-nav">
+                            <li><a href="#" data-toggle="modal" data-target="#uptext" onclick="$('#modal_uptext').modal('toggle');"><span style="font-size: 18px;">标准导入</span> </a> </li>
+                            <!--<li><a href="#" data-toggle="modal" data-target="#uptext_fuzhou" onclick="$('#modal_uptext').modal('toggle');"><span style="font-size: 18px;">福州导入</span></a> </li>-->
+                            <li><a href="#" data-toggle="modal" data-target="#uptext_lims" onclick="$('#modal_uptext').modal('toggle');"><span style="font-size: 18px;">lims系统导入</span> </a> </li>
+                        </ul>
+                    </nav>
+                    <div style="padding: 10px 0px;">
+                        1、标准导入为系统最初的导入操作。请参照：<a href="#">标准导入样表</a>。<br />
+                        2、lims样表中必须含有妊娠次数、生育次数等列，请参照：<a href="#">lims系统导入样表</a>。
+                    </div>
+                </div><!--modal-body-->
+            </div><!--modal-content-->
+        </div><!--modal-dialog-->
+    </div><!--modal-->
+    <!--标准样本信息导入-->
+    <div class="modal fade" id="uptext" tabindex="-1" role="dialog" aria-hidden="true" data-backdrop="static">
+        <div class="modal-dialog modal-md">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                    <h4><span class="glyphicon glyphicon-cloud-upload"></span>上传样本信息 </h4>
+                </div>
+                <div class="modal-body">
+                    <form class="form-horizontal" method="post" action="" enctype="multipart/form-data">
+                        <div class="form-group">
+                            <label class="col-md-3 control-label" style="padding-left: 0px; padding-right: 0px;">上传文件</label>
+                            <input id="file" type="file" name="import_file" style="display: none;">
+                            <div class="col-md-9">
+                                <input id="photoCover" class="input-sm" type="text" style="height: 30px;">
+                                <a class="btn" onclick="$('input[id=file]').click()">浏览</a>
+                            </div>
+                        </div>
+                        <div>
+                           注意： <br />
+                           <span style="color:red">1、导入Excel表格采血日期列、末次月经时间列、报告时间列格式必须为‘日期’。 <br />
+                           2、导入Excel表格年龄列格式必须为’数字‘，且不含小数。<br />
+                           3、导入Excel表格版本为2007以上版本（文件后缀为.xlsx）。</span>
+                        </div>
+                    </form>
+                </div><!--modal-body-->
+                <div class="modal-footer" style="text-align: center;">
+                    <button type="button" class="btn btn-default" id="confirm_uptext">确定</button>
+                    <button type="button" class="btn btn-default" data-dismiss="modal">取消</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!--lims系统样本信息导入-->
+    <div class="modal fade" id="uptext_lims" tabindex="-1" role="dialog" aria-hidden="true" data-backdrop="static">
+        <div class="modal-dialog modal-md">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                    <h4><span class="glyphicon glyphicon-cloud-upload"></span>上传样本信息 </h4>
+                </div>
+                <div class="modal-body">
+                    <form class="form-horizontal" method="post" action="" enctype="multipart/form-data">
+                        <div class="form-group">
+                            <label class="col-md-3 control-label" style="padding-left: 0px; padding-right: 0px">上传文件</label>
+                            <input id="file2" type="file" name="import_file" style="display: none;">
+                            <div class="col-md-9">
+                                <input id="photoCover2" class="input-sm" type="text" style="height: 30px;">
+                                <a class="btn" onclick="$('input[id=file2]').click();">浏览</a>
+                            </div>
+                        </div>
+                        <div>
+                           注意： <br />
+                           <span style="color:red">1、导入Excel表格采血日期列、末次月经时间列、报告时间列格式必须为‘日期’。 <br />
+                           2、福州总医院导入样表中必须需要有收样员列、代理商名称列，否则请使用标准导入。 <br />
+                           3、lims导入样表中必须含有妊娠次数、生育次数等列，否则请使用标准导入。 <br />
+                           4、导入Excel表格年龄列格式必须为’数字‘，且不含小数。<br />
+                           5、导入Excel表格版本为2007以上版本（文件后缀为.xlsx）。</span>
+                        </div>
+                    </form>
+                </div><!--modal-body-->
+                <div class="modal-footer" style="text-align: center">
+                    <button type="button" class="btn btn-default" id="confirm_uptext">确定</button>
+                    <button type="button" class="btn btn-default" data-dismiss="modal">取消</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    </section>
+{% endblock %}
+
+{% block javascripts %}
+    <script src="{% static 'plugins/datatables/jquery.dataTables.min.js' %}"></script>
+    <script src="{% static 'plugins/datatables/dataTables.const.js' %}"></script>
+    <script src="{% static 'plugins/datatables/moment.min.js' %}"></script>
+    <script src="{% static 'js/plugins/layer/layer.js' %}"></script>
+    <script src="{% static 'plugins/select2/select2.full.min.js' %}"></script>
+    <!--<script src="{% static 'bootstrap/js/bootstrap.min.js' %}"></script>-->
+
+    
+    <script type="text/javascript">
+    //初始化表格
+    var oDataTable=null;
+    $(function () {
+        oDataTable = initTable();
+        function initTable() {
+            var oTable = $('#dtbList').DataTable($.extend(true,{},DATATABLES_CONSTANT.DATA_TABLES.DEFAULT_OPTION,{
+                ajax: {
+                    "url": "{% url 'NIPT_DataTable' %}",
+                    "data": function () {
+
+                    }
+                },
+                columns: [
+                    DATATABLES_CONSTANT.DATA_TABLES.COLUMN.CHECKBOX,
+                    {data: "id",},
+                    {data: "sample_number",},
+                    {data: "name",},
+                    {
+                        data: "date_blood",
+                        render: function (data, type, full, meta) {
+                            return moment(data).format("YYYY-MM-DD");
+                        }
+                    },
+                    {data: "age",},
+                    {data: "gestational_weeks",},
+                    {
+                        data: "last_menstrual",
+                        render: function (data, type, full, meta) {
+                            return moment(data).format("YYYY-MM-DD");
+                        }
+                    },
+                    {data: "fetus_number",},
+                    {data: "tube_baby",},
+                    {data: "telephone",},
+                    {data: "hospital",},
+                    {data: "doctor",},
+                    {data: "province",},
+                    {data: "remark",},
+                    {data: "report_area",},
+                    {data: "T13",},
+                    {data: "T18",},
+                    {data: "T21",},
+                    {data: "result",},
+                    {
+                        data: "date_report",
+                        render: function (data, type, full, meta) {
+                            return moment(data).format("YYYY-MM-DD");
+                        }
+                    },
+                    {data: "state_report",},
+                    {data: "person_import",},
+                    {
+                        data: "date_import",
+                        render: function (data, type, full, meta) {
+                            return moment(data).format("YYYY-MM-DD HH:mm");
+                        }
+                    }
+                ],
+            }));
+            return oTable;
+        }
+
+        //checkbox全选
+        $("#checkAll").on("click", function () {
+            if ($(this).prop("checked") === true) {
+                $("input[name='checkList']").prop("checked", $(this).prop("checked"));
+                $("#example tbody tr").addClass('selected');
+            } else {
+                $("input[name='checkList']").prop("checked", false);
+                $("#example tbody tr").removeClass('selected');
+            }
+        });
+
+        //新建
+        $("#btnCreate").click(function () {
+            var div=layer.open({
+                type: 2,
+                title: '新建样本',
+                shadeClose: close,
+                maxmin: true,
+                area: ['500', '1500'],
+                conten:"",
+                end: function () {
+                    oDataTable.ajax.reload();
+                }
+            });
+            layer.full(div)
+        });
+
+    })
+
+    </script>
+{% endblock %}
