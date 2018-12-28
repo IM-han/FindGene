@@ -1,0 +1,67 @@
+{% extends 'base-layer.html' %}
+{% load staticfiles %}
+
+{% block css %}
+    <link rel="stylesheet" href="{% static 'plugins/select2/select2.min.css' %}">
+    <link rel="stylesheet" href="{% static 'js/plugins/layer/skin/layer.css' %}">
+    <link rel="stylesheet" href="{% static 'bootstrap/css/bootstrap-datetimepicker.min.css' %}">
+    <link rel="stylesheet" href="{% static 'plugins/fileinput/fileinput.css' %}">
+{% endblock %}
+
+{% block main %}
+
+<div class="box box-danger">
+<form class="form-horizontal" id="addForm" method="post">
+    {% csrf_token %}
+
+    <div class="box-body">
+        <fieldset>
+            <div class="form-group has-feedback">
+                <label class="col-sm-2 control-label"><strong>lims上传</strong></label>
+                <div class="col-sm-8">
+                    <div class="file-loading">
+                        <input id="lims_content" name="lims_content" class="form-control" type="file">
+                    </div>
+                </div>
+            </div>
+        </fieldset>
+        <fieldset>
+            <div class="form-group has-feedback">
+                <label class="col-sm-2 control-label"><strong>注意：</strong></label>
+                <div class="col-sm-8">
+                    <small class="text-red">
+                        1、导入Excel表格采血日期列、末次月经时间列、报告时间列格式必须为‘日期’。 <br />
+                        2、福州总医院导入样表中必须需要有收样员列、代理商名称列，否则请使用标准导入。 <br />
+                        3、lims导入样表中必须含有妊娠次数、生育次数等列，否则请使用标准导入。 <br />
+                        4、导入Excel表格年龄列格式必须为’数字‘，且不含小数。<br />
+                        5、导入Excel表格版本为2007以上版本（文件后缀为.xlsx）。
+                    </small>
+                </div>
+            </div>
+        </fieldset>
+    </div>
+</form>
+</div>
+
+
+{% endblock %}
+
+{% block javascripts %}
+    <script src="{% static 'plugins/fileinput/fileinput.js' %}"></script>
+    <script src="{% static 'plugins/fileinput/zh.js' %}"></script>
+    <script type="text/javascript">
+    //lims上传
+    $(document).on('ready', function () {
+        $("#lims_content").fileinput({
+            language: "zh",
+            showPreview: false,
+            showUpload: true,
+            allowedFileExtensions: ["xlsx"],
+            uploadUrl: "{% url 'NIPT_LimsImport' %}",
+            uploadExtraData: {
+                'csrfmiddlewaretoken': '{{ csrf_token }}',
+            },
+        });
+    });
+    </script>
+{% endblock %}
