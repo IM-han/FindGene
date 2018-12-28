@@ -19,11 +19,17 @@
 
     <!-- Main content -->
     <section class="content">
-    <div id="devlist">
-        <div class="box box-primary" id="liebiao">
+    <div id="devlist" >
+        <div class="box box-primary" id="liebiao" >
             <div class="box-header">
-                    <button type="button" class="btn btn-default" data-toggle="modal" data-target="#modal_uptext">
+                    <!--<button type="button" class="btn btn-default" data-toggle="modal" data-target="#modal_uptext">
                         <span class="glyphicon glyphicon-import"></span>导入数据
+                    </button>-->
+                    <button type="button" class="btn btn-default btn-sm" onclick="lims_upload()">
+                        <i class="fa fa-cloud-upload">Lims数据上传</i>
+                    </button>
+                    <button type="button" class="btn btn-default btn-sm" onclick="standard_upload()">
+                        <i class="fa fa-cloud-upload">标准数据上传</i>
                     </button>
                     <button type="button" id="btnCheck" class="btn btn-default">
                         <i class="glyphicon glyphicon-ok-sign"></i>数据确认
@@ -31,6 +37,36 @@
                     <button type="button" class="btn btn-default">
                         <i class="glyphicon glyphicon-upload"></i>导出模板
                     </button>
+                <div class="btn-group pull-right" id="selectInfo">
+                    <button type="button" class="btn btn-default dropdown-toggle pull-right" data-toggle="dropdown" aria-expanded="false" name="selectInfo" id="select">
+                        <i class="glyphicon glyphicon-th"></i> <span class="caret"></span> 详细信息
+                    </button>
+                    <ul class="dropdown-menu pull-right" role="menu">
+                    <li data-column="2"><label><input data-column="2" type="checkbox" data-field="sample_number" value="2" >样本编号</label></li>
+                    <li data-column="3"><label><input data-column="3" type="checkbox" data-field="name" value="3" >姓名</label></li>
+                    <li data-column="4"><label><input data-column="4" type="checkbox" data-field="date_blood" value="4" >采血日期</label></li>
+                    <li data-column="5"><label><input data-column="5" type="checkbox" data-field="age" value="5" >年龄</label></li>
+                    <li data-column="6"><label><input data-column="6" type="checkbox" data-field="gestation_weeks" value="6">孕周</label></li>
+                    <li data-column="7"><label><input data-column="7" type="checkbox" data-field="last_menstrual" value="7">末次月经</label></li>
+                    <li data-column="8"><label><input data-column="8" type="checkbox" data-field="fetus_number" value="8">婴儿数量</label></li>
+                    <li data-column="9"><label><input data-column="9" type="checkbox" data-field="tube_baby" value="9" >试管婴儿</label></li>
+                    <li data-column="10"><label><input data-column="10" type="checkbox" data-field="telephone" value="10" >电话</label></li>
+                    <li data-column="11"><label><input data-column="11" type="checkbox" data-field="province" value="11" >省区</label></li>
+                    <li data-column="12"><label><input data-column="12" type="checkbox" data-field="report_area" value="12">报告区域</label></li>
+                    <li data-column="13"><label><input data-column="13" type="checkbox" data-field="T13" value="13" >T13</label></li>
+                    <li data-column="14"><label><input data-column="14" type="checkbox" data-field="T18" value="14" >T18</label></li>
+                    <li data-column="15"><label><input data-column="15" type="checkbox" data-field="T21" value="15" >T21</label></li>
+                    <li data-column="16"><label><input data-column="16" type="checkbox" data-field="result" value="16" >报告结果</label></li>
+                    <li data-column="17"><label><input data-column="17" type="checkbox" data-field="date_report" value="17" >报告时间</label></li>
+                    <li data-column="18"><label><input data-column="18" type="checkbox" data-field="state_report" value="18" >报告状态</label></li>
+                    <li data-column="19"><label><input data-column="19" type="checkbox" data-field="person_import" value="19" >导入人员</label></li>
+                    <li data-column="20"><label><input data-column="20" type="checkbox" data-field="date_import" value="20" >导入时间</label></li>
+                    <li data-column="21"><label><input data-column="21" type="checkbox" data-field="hospital" value="21">送检医院</label></li>
+                    <li data-column="22"><label><input data-column="22" type="checkbox" data-field="doctor" value="22">送检医生</label></li>
+                    <li data-column="23"><label><input data-column="23" type="checkbox" data-field="remark" value="23">备注</label></li>
+                    </ul>
+                </div>
+
                     <button type="button" id="btnCreate" class="btn btn-default">
                         <i class="glyphicon glyphicon-plus"></i>新建
                     </button>
@@ -50,34 +86,34 @@
                     </button>
 
             </div>
-            <div class="box-body">
-                <table id="dtbList" class="display" cellspacing="0" width="100%">
+            <div class="box-body" style="text-align: center; ">
+                <table id="dtbList" class="display nowrap" cellspacing="0" width="100%">
                     <thead>
-                    <tr valign="middle">
+                    <tr valign="middle" style="text-align: center">
                         <th><input type="checkbox" id="checkAll"></th>
-                        <th>ID</th>
-                        <th>样本编号</th>
-                        <th>姓名</th>
-                        <th>采血日期</th>
-                        <th>年龄</th>
-                        <th>孕周</th>
-                        <th>末次月经</th>
-                        <th>单胎/多胎</th>
-                        <th>试管婴儿</th>
-                        <th>联系方式</th>
-                        <th>送检医院</th>
-                        <th>医生</th>
-                        <th>省区</th>
-                        <th>备注</th>
-                        <th>报告地区</th>
-                        <th>T13</th>
-                        <th>T18</th>
-                        <th>T21</th>
-                        <th>检测结果</th>
-                        <th>报告时间</th>
-                        <th>报告状态</th>
-                        <th>导入人员</th>
-                        <th>导入时间</th>
+                        <th style="text-align: center;">ID</th>
+                        <th style="text-align: center;">样本编号</th>
+                        <th style="text-align: center;">姓名</th>
+                        <th style="text-align: center;">采血日期</th>
+                        <th style="text-align: center;">年龄</th>
+                        <th style="text-align: center;">孕周</th>
+                        <th style="text-align: center;">末次月经</th>
+                        <th style="text-align: center;">单胎/多胎</th>
+                        <th style="text-align: center;">试管婴儿</th>
+                        <th style="text-align: center;">联系方式</th>
+                        <th style="text-align: center;">省区</th>
+                        <th style="text-align: center;">报告地区</th>
+                        <th style="text-align: center;">T13</th>
+                        <th style="text-align: center;">T18</th>
+                        <th style="text-align: center;">T21</th>
+                        <th style="text-align: center;">检测结果</th>
+                        <th style="text-align: center;">报告时间</th>
+                        <th style="text-align: center;">报告状态</th>
+                        <th style="text-align: center;">导入人员</th>
+                        <th style="text-align: center;">导入时间</th>
+                        <th style="text-align: center;">送检医院</th>
+                        <th style="text-align: center;">医生</th>
+                        <th style="text-align: center;">备注</th>
 
                     </tr>
                     </thead>
@@ -86,63 +122,7 @@
 
         </div>
     </div>
-    <!--导入数据页面选择-->
-    <div class="modal fade" id="modal_uptext" tabindex="-1" role="dialog" aria-hidden="true" data-backdrop="static">
-        <div class="modal-dialog modal-md">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-                    <h4><span class="glyphicon glyphicon-question-sign">请选择</span> </h4>
-                </div>
-                <div class="modal-body">
-                    <nav class="nav" style="background-color: #f7f7f7;">
-                        <ul class="nav navbar-nav">
-                            <li><a href="#" data-toggle="modal" data-target="#uptext" onclick="$('#modal_uptext').modal('toggle');"><span style="font-size: 18px;">标准导入</span> </a> </li>
-                            <!--<li><a href="#" data-toggle="modal" data-target="#uptext_fuzhou" onclick="$('#modal_uptext').modal('toggle');"><span style="font-size: 18px;">福州导入</span></a> </li>-->
-                            <li><a href="#" data-toggle="modal" data-target="#uptext_lims" onclick="$('#modal_uptext').modal('toggle');"><span style="font-size: 18px;">lims系统导入</span> </a> </li>
-                        </ul>
-                    </nav>
-                    <div style="padding: 10px 0px;">
-                        1、标准导入为系统最初的导入操作。请参照：<a href="#">标准导入样表</a>。<br />
-                        2、lims样表中必须含有妊娠次数、生育次数等列，请参照：<a href="#">lims系统导入样表</a>。
-                    </div>
-                </div><!--modal-body-->
-            </div><!--modal-content-->
-        </div><!--modal-dialog-->
-    </div><!--modal-->
-    <!--标准样本信息导入-->
-    <div class="modal fade" id="uptext" tabindex="-1" role="dialog" aria-hidden="true" data-backdrop="static">
-        <div class="modal-dialog modal-md">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-                    <h4><span class="glyphicon glyphicon-cloud-upload"></span>上传样本信息 </h4>
-                </div>
-                <div class="modal-body">
-                    <form class="form-horizontal" method="post" action="" enctype="multipart/form-data">
-                        <div class="form-group">
-                            <label class="col-md-3 control-label" style="padding-left: 0px; padding-right: 0px;">上传文件</label>
-                            <input id="file" type="file" name="import_file" style="display: none;">
-                            <div class="col-md-9">
-                                <input id="photoCover" class="input-sm" type="text" style="height: 30px;">
-                                <a class="btn" onclick="$('input[id=file]').click()">浏览</a>
-                            </div>
-                        </div>
-                        <div>
-                           注意： <br />
-                           <span style="color:red">1、导入Excel表格采血日期列、末次月经时间列、报告时间列格式必须为‘日期’。 <br />
-                           2、导入Excel表格年龄列格式必须为’数字‘，且不含小数。<br />
-                           3、导入Excel表格版本为2007以上版本（文件后缀为.xlsx）。</span>
-                        </div>
-                    </form>
-                </div><!--modal-body-->
-                <div class="modal-footer" style="text-align: center;">
-                    <button type="button" class="btn btn-default" id="confirm_uptext">确定</button>
-                    <button type="button" class="btn btn-default" data-dismiss="modal">取消</button>
-                </div>
-            </div>
-        </div>
-    </div>
+
     <!--lims系统样本信息导入-->
     <div class="modal fade" id="uptext_lims" tabindex="-1" role="dialog" aria-hidden="true" data-backdrop="static">
         <div class="modal-dialog modal-md">
@@ -187,16 +167,24 @@
     <script src="{% static 'plugins/datatables/moment.min.js' %}"></script>
     <script src="{% static 'js/plugins/layer/layer.js' %}"></script>
     <script src="{% static 'plugins/select2/select2.full.min.js' %}"></script>
-    <!--<script src="{% static 'bootstrap/js/bootstrap.min.js' %}"></script>-->
+
 
     
     <script type="text/javascript">
+
     //初始化表格
     var oDataTable=null;
     $(function () {
         oDataTable = initTable();
         function initTable() {
-            var oTable = $('#dtbList').DataTable($.extend(true,{},DATATABLES_CONSTANT.DATA_TABLES.DEFAULT_OPTION,{
+            var oTable = $('#dtbList').DataTable($.extend(true,{},
+                DATATABLES_CONSTANT.DATA_TABLES.DEFAULT_OPTION,
+                {
+                scrollY: "445px",
+                scrollCollapse: false,
+                searching: false,
+                scrollX: true,
+
                 ajax: {
                     "url": "{% url 'NIPT_DataTable' %}",
                     "data": function () {
@@ -206,52 +194,112 @@
                 columns: [
                     DATATABLES_CONSTANT.DATA_TABLES.COLUMN.CHECKBOX,
                     {data: "id",},
-                    {data: "sample_number",},
-                    {data: "name",},
+                    {
+                        data: "sample_number",
+
+                    },
+                    {
+                        data: "name",
+
+                    },
                     {
                         data: "date_blood",
                         render: function (data, type, full, meta) {
-                            return moment(data).format("YYYY-MM-DD");
+                            return moment(data).format("YYYY/MM/DD");
                         }
                     },
                     {data: "age",},
-                    {data: "gestational_weeks",},
+                    {data: "gestation_weeks",},
                     {
                         data: "last_menstrual",
                         render: function (data, type, full, meta) {
-                            return moment(data).format("YYYY-MM-DD");
+                            return moment(data).format("YYYY/MM/DD");
                         }
                     },
-                    {data: "fetus_number",},
+                    {
+                        data: "fetus_number",
+
+                    },
                     {data: "tube_baby",},
                     {data: "telephone",},
-                    {data: "hospital",},
-                    {data: "doctor",},
+
                     {data: "province",},
-                    {data: "remark",},
-                    {data: "report_area",},
+
+                    {
+                        data: "report_area",
+
+                    },
                     {data: "T13",},
                     {data: "T18",},
                     {data: "T21",},
-                    {data: "result",},
+                    {
+                        data: "result",
+
+                    },
                     {
                         data: "date_report",
                         render: function (data, type, full, meta) {
-                            return moment(data).format("YYYY-MM-DD");
+                            return moment(data).format("YYYY/MM/DD");
                         }
                     },
-                    {data: "state_report",},
+                    {
+                        data: "state_report",
+                        render: function (data) {
+                            if (data==1){
+                                return "数据导入";
+                            }else if (data==2){
+                                return "数据确认";
+                            } else if (data==3){
+                                return "报告生成";
+                            }else if (data==4){
+                                return "报告导出";
+                            }
+                        }
+                    },
                     {data: "person_import",},
                     {
                         data: "date_import",
                         render: function (data, type, full, meta) {
-                            return moment(data).format("YYYY-MM-DD HH:mm");
+                            return moment(data).format("YYYY/MM/DD HH:mm");
                         }
-                    }
+                    },
+                    {
+                        data: "hospital",
+                    },
+                    {data: "doctor",},
+                    {
+                        data: "remark",
+                    },
                 ],
             }));
             return oTable;
         }
+        //列隐藏
+        function hidColumn(jTable, colNum) {
+            //jTable为表格对象，colNum为操作列的序号，为整型数字
+            var column = jTable.column(colNum);
+            column.visible(!column.visible());
+        }
+        //下拉点击事件
+        //alert("dsafls;");
+
+        $("#selectInfo .dropdown-menu").find("li").click(function (e) {
+            var val = $(this).find(".hideColCheck").prop("checked");//获取checkbox状态
+            //alert("dsafls;");
+            if (val == true){
+                //隐藏
+                hidColumn(oDataTable, $(this).attr('data-column'));
+
+            } else {
+                //显示操作
+                hidColumn(oDataTable, $(this).attr('data-column'));
+                //oDataTable.fnSetColumnVis($(this).attr('value'), false);
+            }
+            //列操作后切换checkbox的值
+            $(this).find(".hideColCheck").prop("checked", !val);
+            //阻止下拉框隐藏
+            e.stopPropagation();
+        });
 
         //checkbox全选
         $("#checkAll").on("click", function () {
@@ -272,15 +320,44 @@
                 shadeClose: close,
                 maxmin: true,
                 area: ['500', '1500'],
-                conten:"",
+                content: "{% url 'NIPT_CreateTable' %}",
                 end: function () {
                     oDataTable.ajax.reload();
                 }
             });
             layer.full(div)
         });
+    });
+    //标准数据导入
+        function standard_upload() {
+            layer.open({
+                type: 2,
+                title: '数据导入',
+                shadeClose: false,
+                maxmin: true,
+                area: ['770px', '300px'],
+                content: ["{% url 'NIPT_StandardImport' %}"],
+                end: function () {
+                    window.location.reload();
+                }
+            });
+        }
+        //Lims数据导入
+    function lims_upload() {
+        layer.open({
+            type: 2,
+            title: '数据导入',
+            shadeClose: false,
+            maxmin: true,
+            area: ['770px', '300px'],
+            content: ["{% url 'NIPT_LimsImport' %}"],
+            end: function () {
+                window.location.reload();
+            }
+        });
+    }
 
-    })
+
 
     </script>
 {% endblock %}
