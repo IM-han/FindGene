@@ -22,9 +22,7 @@
     <div id="devlist" >
         <div class="box box-primary" id="liebiao" >
             <div class="box-header">
-                    <!--<button type="button" class="btn btn-default" data-toggle="modal" data-target="#modal_uptext">
-                        <span class="glyphicon glyphicon-import"></span>导入数据
-                    </button>-->
+
                     <button type="button" class="btn btn-default btn-sm" onclick="lims_upload()">
                         <i class="fa fa-cloud-upload">Lims数据上传</i>
                     </button>
@@ -34,7 +32,7 @@
                     <button type="button" id="btnCheck" class="btn btn-default">
                         <i class="glyphicon glyphicon-ok-sign"></i>数据确认
                     </button>
-                    <button type="button" class="btn btn-default">
+                    <button type="button" onclick="btnExportTemplate()" class="btn btn-default">
                         <i class="glyphicon glyphicon-upload"></i>导出模板
                     </button>
                 <div class="btn-group pull-right" id="selectInfo">
@@ -123,41 +121,6 @@
         </div>
     </div>
 
-    <!--lims系统样本信息导入-->
-    <div class="modal fade" id="uptext_lims" tabindex="-1" role="dialog" aria-hidden="true" data-backdrop="static">
-        <div class="modal-dialog modal-md">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-                    <h4><span class="glyphicon glyphicon-cloud-upload"></span>上传样本信息 </h4>
-                </div>
-                <div class="modal-body">
-                    <form class="form-horizontal" method="post" action="" enctype="multipart/form-data">
-                        <div class="form-group">
-                            <label class="col-md-3 control-label" style="padding-left: 0px; padding-right: 0px">上传文件</label>
-                            <input id="file2" type="file" name="import_file" style="display: none;">
-                            <div class="col-md-9">
-                                <input id="photoCover2" class="input-sm" type="text" style="height: 30px;">
-                                <a class="btn" onclick="$('input[id=file2]').click();">浏览</a>
-                            </div>
-                        </div>
-                        <div>
-                           注意： <br />
-                           <span style="color:red">1、导入Excel表格采血日期列、末次月经时间列、报告时间列格式必须为‘日期’。 <br />
-                           2、福州总医院导入样表中必须需要有收样员列、代理商名称列，否则请使用标准导入。 <br />
-                           3、lims导入样表中必须含有妊娠次数、生育次数等列，否则请使用标准导入。 <br />
-                           4、导入Excel表格年龄列格式必须为’数字‘，且不含小数。<br />
-                           5、导入Excel表格版本为2007以上版本（文件后缀为.xlsx）。</span>
-                        </div>
-                    </form>
-                </div><!--modal-body-->
-                <div class="modal-footer" style="text-align: center">
-                    <button type="button" class="btn btn-default" id="confirm_uptext">确定</button>
-                    <button type="button" class="btn btn-default" data-dismiss="modal">取消</button>
-                </div>
-            </div>
-        </div>
-    </div>
     </section>
 {% endblock %}
 
@@ -227,6 +190,39 @@
 
                     {
                         data: "report_area",
+                        render: function (data) {
+                            if (data==0 | data=="成都"){
+                                return "成都";
+                            } else if (data==1 | data=="福州总医院"){
+                                return "福州总医院";
+                            } else if (data=='2' | data=="湘雅医院"){
+                                return "湘雅医院";
+                            } else if (data=='3' | data=="贵州医科大学附属医院"){
+                                return "贵州医科大学附属医院";
+                            } else if (data=="4" | data=="吉林省妇幼"){
+                                return "吉林省妇幼";
+                            } else if (data=="5" | data=="西南医院"){
+                                return "西南医院";
+                            } else if (data=="6" | data=="长治妇幼"){
+                                return "长治妇幼";
+                            } else if (data=="7" | data=="山东检验所"){
+                                return "山东检验所";
+                            } else if (data=="8" | data=="山东凡迪"){
+                                return "山东凡迪";
+                            } else if (data=="9" | data=="广东省妇幼"){
+                                return "广东省妇幼";
+                            } else if (data=="10" | data=="扬州市妇幼保健院"){
+                                return "扬州市妇幼保健院";
+                            } else if (data=="11" | data=="宜春市妇幼保健医院"){
+                                return "宜春市妇幼保健医院";
+                            } else if (data=="12" | data=="河北省医科大学第二医院"){
+                                return "河北省医科大学第二医院";
+                            } else if (data=="13" | data=="武汉市中心医院"){
+                                return "武汉市中心医院";
+                            } else {
+                                return "非报告区域";
+                            }
+                        }
 
                     },
                     {data: "T13",},
@@ -234,6 +230,23 @@
                     {data: "T21",},
                     {
                         data: "result",
+                        render: function (data) {
+                            if (data==0 | data=="未见异常;"){
+                                return "未见异常;";
+                            } else if (data==1 | data=="chr13三体高风险;"){
+                                return "chr13三体高风险;";
+                            } else if (data==2 | data=="chr13三体低风险;"){
+                                return "chr13三体低风险;";
+                            } else if (data==3 | data=="chr18三体高风险;"){
+                                return "chr18三体高风险;";
+                            } else if (data==4 | data=="chr18三体低风险;"){
+                                return "chr18三体低风险;";
+                            } else if (data==5 | data=="chr21三体低风险;"){
+                                return "chr21三体低风险;";
+                            } else if (data==6 | data=="chr21三体低风险;"){
+                                return "chr21三体低风险;";
+                            }
+                        }
 
                     },
                     {
@@ -319,7 +332,7 @@
                 title: '新建样本',
                 shadeClose: close,
                 maxmin: true,
-                area: ['500', '1500'],
+                //area: ['500px', '1500px'],
                 content: "{% url 'NIPT_CreateTable' %}",
                 end: function () {
                     oDataTable.ajax.reload();
@@ -327,6 +340,7 @@
             });
             layer.full(div)
         });
+
     });
     //标准数据导入
         function standard_upload() {
@@ -356,6 +370,21 @@
             }
         });
     }
+    //导出模板
+        function btnExportTemplate() {
+            var div=layer.open({
+                type: 2,
+                title: '导出模板',
+                shadeClose: close,
+                maxmin: true,
+                area: ['600px', '370px'],
+                content: "{% url 'NIPT_Template' %}",
+                end: function () {
+                    window.location.reload();
+                }
+            });
+
+        };
 
 
 
