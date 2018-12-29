@@ -1,9 +1,11 @@
 from django import forms
+from datetime import datetime
 from django.contrib.auth import get_user_model
 
 from .models import NIPTImportData
 
 class NIPTCreateForm(forms.ModelForm):
+
     class Meta:
         model = NIPTImportData
         fields = '__all__'
@@ -20,9 +22,22 @@ class NIPTCreateForm(forms.ModelForm):
             "date_blood": {"required": "请输入采血时间"},
             "age": {"required": "请输入孕妇年龄"},
         }
-
-    def clean(self):
+    '''def __init__(self, *args, **kwargs):
+        super(NIPTCreateForm, self).__init__(*args, **kwargs)
+        self.initial["fetus_number"] = "2"
+        self.initial["result"] = "0"
+        self.initial["state_report"] = "1"
+    '''
+    def clean(self, ):
         cleaned_data = super(NIPTCreateForm, self).clean()
+        cleaned_data["fetus_number"] = 0
+        cleaned_data["result"] = "0"
+        cleaned_data["state_report"] = "1"
+        cleaned_data["date_import"] = datetime.now()
+        ##cleaned_data["fetus_number"]
+        #cleaned_data["person_import"] = request.user.username
+
+        print(cleaned_data)
         sample_number = cleaned_data.get("sample_number")
         if NIPTImportData.objects.filter(sample_number=sample_number).count():
             raise forms.ValidationError("样本编号已存在")
