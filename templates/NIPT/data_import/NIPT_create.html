@@ -34,7 +34,7 @@
             <div class="form-group has-feedback">
                 <label class="col-sm-2 control-label"><strong style="color:#F00">*</strong>检测结果</label>
                 <div class="col-sm-3">
-                    <select class="form-control select2" style="width: 100%;" name="report_result">
+                    <select class="form-control select2" style="width: 100%;" name="result">
                         <option value="{{ NIPTImportData.result }}">
                             {{ NIPTImportData.get_result_display }}
                         </option>
@@ -61,7 +61,7 @@
             <div class="form-group has-feedback">
                 <label class="col-sm-2 control-label"><strong style="color:#F00">*</strong>报告时间</label>
                 <div class="col-sm-3">
-                    <input type="text" class="form-control pull-right form_datetime" name="date_report" value="{{ NIPTImportData.date_report |date:'Y-m-d H:m:s' }}">
+                    <input type="text" class="form-control pull-right form_datetime" name="date_report" value="{{ NIPTImportData.date_report |date:'Y-m-d' }}">
                 </div>
                 <label class="col-sm-2 control-label"><strong style="color:#F00">*</strong>采血时间</label>
                 <div class="col-sm-3">
@@ -89,9 +89,9 @@
                 </div>
             </div>
             <div class="form-group has-feedback">
-                <label class="col-sm-2 control-label">单双胎</label>
+                <label class="col-sm-2 control-label" >单双胎</label>
                 <div class="col-sm-3">
-                    <select class="form-control select2" name="fetus_num">
+                    <select class="form-control select2" style="width: 100%;" name="fetus_num">
                         <option value="{{ NIPTImportData.fetus_number }}">
                             {{ NIPTImportData.get_fetus_number_display }}
                         </option>
@@ -125,7 +125,7 @@
                 </div>
                 <label class="col-sm-2 control-label">21号唐筛结果</label>
                 <div class="col-sm-3">
-                    <select class="form-control select2" name="DS21_result">
+                    <select class="form-control select2" style="width: 100%;" name="DS21_result">
                         <option value="{{ NIPTImportData.DS21_result }}">
                             {{ NIPTImportData.get_DS21_result_display }}
                         </option>
@@ -142,7 +142,7 @@
                 </div>
                 <label class="col-sm-2 control-label">18号唐筛结果</label>
                 <div class="col-sm-3">
-                    <select class="form-control select2" name="DS18_result">
+                    <select class="form-control select2" style="width: 100%;" name="DS18_result">
                         <option value="{{ NIPTImportData.DS18_result }}">
                             {{ NIPTImportData.get_DS18_result_display }}
                         </option>
@@ -153,13 +153,9 @@
                 </div>
             </div>
             <div class="form-group has-feedback">
-                <label class="col-sm-2 control-label">其他唐筛值</label>
-                <div class="col-sm-3">
-                    <input class="form-control" name="DSother_value" value="{{ NIPTImportData.DSother_value }}">
-                </div>
                 <label class="col-sm-2 control-label">其他唐筛结果</label>
                 <div class="col-sm-3">
-                    <select class="form-control select2" name="DSother_result">
+                    <select class="form-control select2" style="width: 100%;" name="DSother_result">
                         <option value="{{ NIPTImportData.DSother_result }}">
                             {{ NIPTImportData.get_DSother_result_display }}
                         </option>
@@ -167,6 +163,10 @@
                             <option value="{{ DSother.item }}">{{ DSother.value }}</option>
                         {% endfor %}
                     </select>
+                </div>
+                <label class="col-sm-2 control-label">省区</label>
+                <div class="col-sm-3">
+                    <input class="form-control" name="province" value="{{ NIPTImportData.province }}" type="text">
                 </div>
             </div>
             <div class="form-group has-feedback">
@@ -179,13 +179,7 @@
                     <input class="form-control" name="doctor" value="{{ NIPTDataImport.doctor }}" type="text">
                 </div>
             </div>
-            <div class="form-group has-feedback">
-                <label class="col-sm-2 control-label">省区</label>
-                <div class="col-sm-3">
-                    <input class="form-control" name="province" value="{{ NIPTImportData.province }}" type="text">
-                </div>
 
-            </div>
             <div class="form-group has-feedback">
                 <label class="col-sm-2 control-label">备注</label>
                 <div class="col-sm-8">
