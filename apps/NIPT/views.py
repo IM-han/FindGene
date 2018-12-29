@@ -153,7 +153,10 @@ class NIPTDataLimsImportView(LoginRequiredMixin, View):
             for i in range(1,nrows):
                 rowValues = table.row_values(i) #一行数据
                 NIPT = NIPTImportData()  # 实例化NIPT表
-                NIPT.sample_number = int(rowValues[0])
+                if isinstance(rowValues[0], float):
+                    NIPT.sample_number = int(rowValues[0])
+                elif isinstance(rowValues[0], str):
+                    NIPT.sample_number = rowValues[0]
                 NIPT.name = rowValues[2]
                 if isinstance(rowValues[1], str):
                     blood = [int(x) for x in rowValues[1].split('/')]
@@ -169,6 +172,7 @@ class NIPTDataLimsImportView(LoginRequiredMixin, View):
                 elif isinstance(rowValues[13], float):
                     NIPT.last_menstrual = date(*xldate_as_tuple(rowValues[13], 0)[:3])
                 NIPT.fetus_number = rowValues[14]
+                print(rowValues[14],rowValues[15:19])
                 NIPT.tube_baby = rowValues[15]
                 NIPT.telephone = int(rowValues[16])
                 NIPT.hospital = rowValues[17]
@@ -239,9 +243,13 @@ class NIPTCreateView(LoginRequiredMixin, View):
         return render(request, 'NIPT/data_import/NIPT_create.html', ret)
 
     def post(self, request):
+        date_import = datetime.now()
         res = dict()
         NewData = NIPTImportData()
-        NewDataForm = NIPTCreateForm(request.POST, instance=NewData, initial={'person_import': request.user.id})
+        NewDataForm = NIPTCreateForm(request.POST, instance=NewData)
+        #print(NewDataForm.is_valid(),request.user.username)
+        print(NewDataForm)
+        res["person_import"] = request.user.username
         if NewDataForm.is_valid():
             NewDataForm.save()
             res['status'] = 'success'
@@ -249,8 +257,17 @@ class NIPTCreateView(LoginRequiredMixin, View):
             pattern = '<li>.*?<ul class=.*?><li>(.*?)</li>'
             errors = str(NewDataForm.errors)
             NewDataForm_errors = re.findall(pattern, errors)
+            #print(NewDataForm_errors)
             res = {
                 'status': 'fail',
                 'NewDataForm_errors': NewDataForm_errors[0]
             }
+        print(res)
         return HttpResponse(json.dumps(res), content_type='application/json')
+
+class NIPTExportTemplateView(LoginRequiredMixin, View):
+    """
+    模板导出视图
+    """
+    def get(self, request):
+        return render(request, 'NIPT/data_import/export_template.html')
