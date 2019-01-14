@@ -2,13 +2,13 @@ import json,re,xlrd
 from datetime import datetime,date
 from xlrd import xldate_as_tuple
 from django.http import HttpResponse,HttpResponseRedirect
-from django.shortcuts import render
+from django.shortcuts import render, get_object_or_404
 from django.views.generic.base import View
 from django.core.serializers.json import DjangoJSONEncoder
 from utils.mixin_utils import LoginRequiredMixin
 from .models import NIPTImportData
 from django.contrib.auth import get_user_model
-from .forms import NIPTCreateForm, NIPTStandardImportForm, NIPTLimsImportForm
+from .forms import NIPTCreateForm, NIPTStandardImportForm, NIPTLimsImportForm, NIPTUpdateForm
 User = get_user_model()
 
 # Create your views here.
@@ -25,17 +25,69 @@ class NIPTDataImportView(LoginRequiredMixin, View):
     NIPT数据导入视图
     """
     def get(self, request):
-        return render(request, 'NIPT/data_import/data_import.html')
+        area_list = []
+        result_list = []
+        fetus_num_list = []
+        tube_baby_list = []
+        DS_result_list = []
+        for DS_result in NIPTImportData.DS_result_choices:
+            DS_result_dict = dict(item=DS_result[0], value=DS_result[1])
+            DS_result_list.append(DS_result_dict)
+        for tube_baby in NIPTImportData.tube_choices:
+            tube_baby_dict = dict(item=tube_baby[0], value=tube_baby[1])
+            tube_baby_list.append(tube_baby_dict)
+        for fetus_num in NIPTImportData.fetus_number_choices:
+            fetus_num_dict = dict(item=fetus_num[0], value=fetus_num[1])
+            fetus_num_list.append(fetus_num_dict)
+        for area_type in NIPTImportData.area_choices:
+            area_dict = dict(item=area_type[0], value=area_type[1])
+            area_list.append(area_dict)
+        for result_type in NIPTImportData.result_choices:
+            result_dict = dict(item=result_type[0], value=result_type[1])
+            result_list.append(result_dict)
+        ret = {
+            'area_list': area_list,
+            'result_list': result_list,
+            'fetus_num_list': fetus_num_list,
+            'tube_baby_list': tube_baby_list,
+            'DS_result_list': DS_result_list,
+        }
+        return render(request, 'NIPT/data_import/data_import.html', ret)
 
 class NIPTDataTableView(LoginRequiredMixin, View):
     """
     NIPT数据获取视图
     """
+    def parse_date(self, s):
+        Y,M,D = s.split('-')
+        return date(int(Y),int(M),int(D))
+
     def get(self, request):
         fields = ['id', 'sample_number', 'name', 'date_blood', 'age', 'gestation_weeks', 'last_menstrual', 'fetus_number', 'tube_baby', 'telephone', 'hospital', 'doctor', 'province', 'remark', 'report_area', 'T13', 'T18', 'T21', 'result', 'date_report', 'state_report', 'person_import', 'date_import']
-        #filters = dict()
-        #filters['proposer_id'] = request.user.id
-        ret = dict(data=list(NIPTImportData.objects.values(*fields).order_by('-date_import')))
+        filters = dict()
+        if 'sample_number' in request.GET and request.GET['sample_number']:
+            filters['sample_number__icontains'] = request.GET['sample_number']
+        if 'date_blood_range' in request.GET and request.GET['date_blood_range']:
+            date_blood = request.GET['date_blood_range']
+            start_time, end_time = date_blood.split('--')
+            start_time = self.parse_date(start_time)
+            end_time = self.parse_date(end_time)
+            filters['date_blood__range'] = (start_time, end_time)
+        if 'name' in request.GET and request.GET['name']:
+            filters['name'] = request.GET['name']
+        if 'hospital' in request.GET and request.GET['hospital']:
+            filters['hospital'] = request.GET['hospital']
+        if 'province' in request.GET and request.GET['province']:
+            filters['province'] = request.GET['province']
+        if 'report_area' in request.GET and request.GET['report_area']:
+            filters['report_area'] = request.GET['report_area']
+        if 'date_report_range' in request.GET and request.GET['date_report_range']:
+            date_report = request.GET['date_report_range']
+            start_time,end_time = date_report.split('--')
+            start_time=self.parse_date(start_time)
+            end_time=self.parse_date(end_time)
+            filters['date_report__range'] = (start_time, end_time)
+        ret = dict(data=list(NIPTImportData.objects.filter(**filters).values(*fields).order_by('-date_import')))
         return HttpResponse(json.dumps(ret, cls=DjangoJSONEncoder), content_type='application/json')
 
 class NIPTDataStandardImportView(LoginRequiredMixin, View):
@@ -240,16 +292,93 @@ class NIPTCreateView(LoginRequiredMixin, View):
             'tube_baby_list': tube_baby_list,
             'DS_result_list': DS_result_list,
         }
+        if 'id' in request.GET and request.GET['id']:
+            NIPTData = get_object_or_404(NIPTImportData, pk=request.GET['id'])
+            ret['NIPTData'] = NIPTData
+            #print(NIPTData,request.GET,request.GET['id'])
+            #print(ret)
         return render(request, 'NIPT/data_import/NIPT_create.html', ret)
 
     def post(self, request):
-        date_import = datetime.now()
+
         res = dict()
-        NewData = NIPTImportData()
-        NewDataForm = NIPTCreateForm(request.POST, instance=NewData)
+        print(request.POST,)
+        if 'id' in request.POST and request.POST['id']:
+            NIPTData = get_object_or_404(NIPTImportData, pk=request.POST['id'])
+            #print(request.POST,request.POST['id'],NIPTData,NIPTImportData())
+            NewDataForm = NIPTUpdateForm(request.POST, instance=NIPTData)
+            print(NIPTData,NewDataForm)
+        else:
+            NIPTData = NIPTImportData()
+            #print(request.POST, NIPTData, )
+            NewDataForm = NIPTCreateForm(request.POST, instance=NIPTData)
         #print(NewDataForm.is_valid(),request.user.username)
-        print(NewDataForm)
-        res["person_import"] = request.user.username
+
+            #print(NewDataForm)
+
+        if NewDataForm.is_valid():
+            NewDataForm.save()
+            res['status'] = 'success'
+        else:
+            pattern = '<li>.*?<ul class=.*?><li>(.*?)</li>'
+            errors = str(NewDataForm.errors)
+
+            NewDataForm_errors = re.findall(pattern, errors)
+
+            res = {
+                'status': 'fail',
+                'NewDataForm_errors': NewDataForm_errors[0]
+            }
+
+        return HttpResponse(json.dumps(res), content_type='application/json')
+
+class NIPTUpdateView(LoginRequiredMixin, View):
+    """
+    NIPT修改样本视图
+    """
+
+    def get(self, request):
+        area_list = []
+        result_list = []
+        fetus_num_list = []
+        tube_baby_list = []
+        DS_result_list = []
+        for DS_result in NIPTImportData.DS_result_choices:
+            DS_result_dict = dict(item=DS_result[0], value=DS_result[1])
+            DS_result_list.append(DS_result_dict)
+        for tube_baby in NIPTImportData.tube_choices:
+            tube_baby_dict = dict(item=tube_baby[0], value=tube_baby[1])
+            tube_baby_list.append(tube_baby_dict)
+        for fetus_num in NIPTImportData.fetus_number_choices:
+            fetus_num_dict = dict(item=fetus_num[0], value=fetus_num[1])
+            fetus_num_list.append(fetus_num_dict)
+        for area_type in NIPTImportData.area_choices:
+            area_dict = dict(item=area_type[0], value=area_type[1])
+            area_list.append(area_dict)
+        for result_type in NIPTImportData.result_choices:
+            result_dict = dict(item=result_type[0], value=result_type[1])
+            result_list.append(result_dict)
+        ret = {
+            'area_list': area_list,
+            'result_list': result_list,
+            'fetus_num_list': fetus_num_list,
+            'tube_baby_list': tube_baby_list,
+            'DS_result_list': DS_result_list,
+        }
+        if 'id' in request.GET and request.GET['id']:
+            NIPTData = get_object_or_404(NIPTImportData, pk=request.GET['id'])
+            ret['NIPTData'] = NIPTData
+            # print(NIPTData,request.GET,request.GET['id'])
+            # print(ret)
+        return render(request, 'NIPT/data_import/NIPT_update.html', ret)
+
+    def post(self, request):
+
+        res = dict()
+        #print(request.POST['sample_number'])
+        NIPTData = get_object_or_404(NIPTImportData, sample_number=request.POST['sample_number'])
+        NewDataForm = NIPTUpdateForm(request.POST, instance=NIPTData)
+
         if NewDataForm.is_valid():
             NewDataForm.save()
             res['status'] = 'success'
@@ -257,12 +386,11 @@ class NIPTCreateView(LoginRequiredMixin, View):
             pattern = '<li>.*?<ul class=.*?><li>(.*?)</li>'
             errors = str(NewDataForm.errors)
             NewDataForm_errors = re.findall(pattern, errors)
-            #print(NewDataForm_errors)
+
             res = {
                 'status': 'fail',
                 'NewDataForm_errors': NewDataForm_errors[0]
             }
-        print(res)
         return HttpResponse(json.dumps(res), content_type='application/json')
 
 class NIPTExportTemplateView(LoginRequiredMixin, View):
@@ -271,3 +399,23 @@ class NIPTExportTemplateView(LoginRequiredMixin, View):
     """
     def get(self, request):
         return render(request, 'NIPT/data_import/export_template.html')
+
+class NIPTDeleteView(LoginRequiredMixin, View):
+    """
+    删除样本视图
+    """
+    def post(self, request):
+        ret = dict(result=False)
+        if 'id' in request.POST and request.POST['id']:
+            id_list = map(int, request.POST['id'].split(','))
+            #print(id_list)
+            NIPTImportData.objects.filter(id__in=id_list).delete()
+            ret['result'] = True
+        return HttpResponse(json.dumps(ret), content_type='application/json')
+
+class NIPTReportView(LoginRequiredMixin, View):
+    '''
+    NIPT报告审核视图
+    '''
+    def get(self, request):
+        return render(request, 'NIPT/report_check/report_check.html')

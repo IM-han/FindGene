@@ -14,8 +14,8 @@ pdfmetrics.registerFont(TTFont('simhei-bold', 'simhei-bold.ttf'))
 pdfmetrics.registerFont(TTFont('simsun', 'simsun.ttf'))
 from reportlab.lib.styles import getSampleStyleSheet
 from reportlab.lib import colors
-from reportlab.platypus import SimpleDocTemplate, Paragraph, Spacer, Image, Table, TableStyle
-from reportlab.graphics.shapes import Drawing
+from reportlab.platypus import SimpleDocTemplate, Paragraph, Image, Table, TableStyle
+
 from reportlab.lib.pagesizes import A4
 import time
 

@@ -13,7 +13,7 @@
     <ol class="breadcrumb">
         <li><a href=""><i class="fa fa-dashboard"></i>凡迪基因报告管理系统 </a> </li>
         <li class="active"><a href="{% url 'NIPT' %}">NIPT</a> </li>
-        <li class="active"><a href="{% url 'NIPT_DataImport' %}">数据导入</a> </li>
+        <li class="active"><a href="{% url 'NIPT_Report' %}">报告审核</a> </li>
     </ol>
     </section>
 
@@ -23,25 +23,20 @@
         <div class="box box-primary" id="liebiao" >
             <div class="box-header">
 
-                    <button type="button" class="btn btn-default btn-sm" onclick="lims_upload()">
-                        <i class="fa fa-cloud-upload">Lims数据上传</i>
+                    <button type="button" class="btn btn-default btn-sm" onclick="">
+                        <i class="fa fa-cloud-upload">生成报告</i>
                     </button>
-                    <button type="button" class="btn btn-default btn-sm" onclick="standard_upload()">
-                        <i class="fa fa-cloud-upload">标准数据上传</i>
-                    </button>
-                    <button type="button" id="btnCheck" class="btn btn-default">
-                        <i class="glyphicon glyphicon-ok-sign"></i>数据确认
+                    <button type="button" class="btn btn-default btn-sm" onclick="">
+                        <i class="fa fa-cloud-upload">导出报告</i>
                     </button>
                     <button type="button" onclick="btnExportTemplate()" class="btn btn-default">
-                        <i class="glyphicon glyphicon-upload"></i>导出模板
+                        <i class="glyphicon glyphicon-upload"></i>导出表格
                     </button>
-                <div class="btn-group pull-right" id="selectInfo">
+                <div class="btn-group " id="selectInfo">
                     <button type="button" class="btn btn-default dropdown-toggle pull-right" data-toggle="dropdown" aria-expanded="false" name="selectInfo" id="select">
                         <i class="glyphicon glyphicon-th"></i> <span class="caret"></span> 详细信息
                     </button>
                     <ul class="dropdown-menu pull-right" role="menu">
-                    <li data-column="2"><label><input data-column="2" type="checkbox" data-field="sample_number" value="2" >样本编号</label></li>
-                    <li data-column="3"><label><input data-column="3" type="checkbox" data-field="name" value="3" >姓名</label></li>
                     <li data-column="4"><label><input data-column="4" type="checkbox" data-field="date_blood" value="4" >采血日期</label></li>
                     <li data-column="5"><label><input data-column="5" type="checkbox" data-field="age" value="5" >年龄</label></li>
                     <li data-column="6"><label><input data-column="6" type="checkbox" data-field="gestation_weeks" value="6">孕周</label></li>
@@ -50,13 +45,7 @@
                     <li data-column="9"><label><input data-column="9" type="checkbox" data-field="tube_baby" value="9" >试管婴儿</label></li>
                     <li data-column="10"><label><input data-column="10" type="checkbox" data-field="telephone" value="10" >电话</label></li>
                     <li data-column="11"><label><input data-column="11" type="checkbox" data-field="province" value="11" >省区</label></li>
-                    <li data-column="12"><label><input data-column="12" type="checkbox" data-field="report_area" value="12">报告区域</label></li>
-                    <li data-column="13"><label><input data-column="13" type="checkbox" data-field="T13" value="13" >T13</label></li>
-                    <li data-column="14"><label><input data-column="14" type="checkbox" data-field="T18" value="14" >T18</label></li>
-                    <li data-column="15"><label><input data-column="15" type="checkbox" data-field="T21" value="15" >T21</label></li>
-                    <li data-column="16"><label><input data-column="16" type="checkbox" data-field="result" value="16" >报告结果</label></li>
                     <li data-column="17"><label><input data-column="17" type="checkbox" data-field="date_report" value="17" >报告时间</label></li>
-                    <li data-column="18"><label><input data-column="18" type="checkbox" data-field="state_report" value="18" >报告状态</label></li>
                     <li data-column="19"><label><input data-column="19" type="checkbox" data-field="person_import" value="19" >导入人员</label></li>
                     <li data-column="20"><label><input data-column="20" type="checkbox" data-field="date_import" value="20" >导入时间</label></li>
                     <li data-column="21"><label><input data-column="21" type="checkbox" data-field="hospital" value="21">送检医院</label></li>
@@ -65,15 +54,6 @@
                     </ul>
                 </div>
 
-                    <button type="button" id="btnCreate" class="btn btn-default">
-                        <i class="glyphicon glyphicon-plus"></i>新建
-                    </button>
-                    <button type="button" id="btnUpdate" onclick="btnModification({{ NIPTData.id }})" class="btn btn-default">
-                        <i class="glyphicon glyphicon-pencil"></i>修改
-                    </button>
-
-                    <button type="button" id="btnRemove" class="btn btn-default">
-                        <i class="glyphicon glyphicon-remove"></i>删除
                     </button>
                     <!--查询-->
                     <div class="box box-danger" id="researchTable"  style="display: none;overflow: hidden;">
@@ -93,18 +73,6 @@
                                         </div>
                                     </div>
                                     <div class="form-group has-feedback">
-                                        <label class="col-sm-4 control-label">省区</label>
-                                        <div class="col-sm-6">
-                                            <input class="form-control" name="province" id="province" type="text" placeholder="请输入省区" autocomplete="off">
-                                        </div>
-                                    </div>
-                                    <div class="form-group has-feedback">
-                                        <label class="col-sm-4 control-label">送检医院</label>
-                                        <div class="col-sm-6">
-                                            <input class="form-control" name="hospital" id="hospital" type="text" placeholder="请输入医院" autocomplete="off">
-                                        </div>
-                                    </div>
-                                    <div class="form-group has-feedback">
                                         <label class="col-sm-4 control-label">报告地区</label>
                                         <div class="col-sm-6">
                                             <select class="form-control inputText select2" name="report_area" id="report_area">
@@ -116,17 +84,10 @@
                                         </div>
                                     </div>
                                     <div class="form-group has-feedback">
-                                        <label class="col-sm-4 control-label">采血时间</label>
-                                        <div class="col-sm-6">
-                                        <input type="text" class="form-control pull-right form_datetime" name="date_blood_range" id="date_blood_range" placeholder="--" autocomplete="off">
-                                        </div>
-                                    </div>
-                                    <div class="form-group has-feedback">
                                         <label class="col-sm-4 control-label">报告时间</label>
                                         <div class="col-sm-6">
                                         <input type="text" class="form-control pull-right form_datetime" name="date_report_range" id="date_report_range" placeholder="--" autocomplete="off">
                                         </div>
-
                                     </div>
                                 </fieldset>
                             </div>
@@ -189,11 +150,7 @@
     <script src="{% static 'plugins/select2/select2.full.min.js' %}"></script>
     <script src="{% static 'js/plugins/layDate-v5.0.9/laydate/laydate.js' %}"></script>
 
-
-    
     <script type="text/javascript">
-
-    //初始化表格
     var oDataTable=null;
     $(function () {
         oDataTable = initTable();
@@ -211,11 +168,7 @@
                     "data": function (d) {
                         d.sample_number=$("#sample_number").val();
                         d.name=$("#name").val();
-                        d.province=$("#province").val();
-                        d.hospital=$("#hospital").val();
                         d.date_report_range=$("#date_report_range").val();
-                        d.date_blood_range=$("#date_blood_range").val();
-                        //d.report_area=encodeURI($("#report_area").val()) ;
                         d.report_area=$("#report_area").val();
                     }
                 },
@@ -309,22 +262,19 @@
             column.visible(!column.visible());
         }
         //下拉点击事件
-        //alert("dsafls;");
-
         $("#selectInfo .dropdown-menu").find("li").click(function (e) {
             var val = $(this).find(".hideColCheck").prop("checked");//获取checkbox状态
-            //alert("dsafls;");
-            if (val == true){
+            //alert(val)
+            if (val == false){
                 //隐藏
                 hidColumn(oDataTable, $(this).attr('data-column'));
 
             } else {
                 //显示操作
                 hidColumn(oDataTable, $(this).attr('data-column'));
-                //oDataTable.fnSetColumnVis($(this).attr('value'), false);
             }
             //列操作后切换checkbox的值
-            $(this).find(".hideColCheck").prop("checked", !val);
+            $(this).find(".hideColCheck").prop("checked", val);
             //阻止下拉框隐藏
             e.stopPropagation();
         });
@@ -342,57 +292,18 @@
             }
         });
 
-        
-        //删除
-        $("#btnRemove").click(function () {
-            if ($("input[name='checkList']:checked").length==0){
-                layer.msg("请选择要删除的样本");
-                return;
-            }
-            var arrId = new Array();
-            $("input[name='checkList']:checked").each(function () {
-                arrId.push($(this).val());
-            });
-            var sId = arrId.join(',');
-
-            layer.alert('确定删除'+arrId.length+'个样本吗？',{
-                title: '提示'
-                , icon: 3 //0:感叹号 1：对号 2：差号 3：问号 4：小锁 5：哭脸 6：笑脸
-                , time: 0 //不自动关闭
-                , btn: ['YES', 'NO']
-                , yes: function (index) {
-                    layer.close(index);
-                    $.ajax({
-                        type: "POST",
-                        url: "{% url 'NIPT_Delete' %}",
-                        data: {"id": sId, csrfmiddlewaretoken: '{{ csrf_token }}'},
-                        cache: false,
-                        success: function (msg) {
-                            if (msg.result){
-                                layer.alert("删除成功", {icon: 1});
-                                oDataTable.ajax.reload();
-                            } else {
-                                layer.alert("删除失败,请联系管理员", {icon: 2});
-                            }
-                            return;
-                        }
-                    });
-                }
-            });
-        });
-
         //查询
         $("#btnSearch").on('click', function () {
             layer.open({
                 title: '查询',
                 type: 1,
                 //offset: 't',
-                area: ['500px', '550px'],
+                area: ['500px', '400px'],
                 shade: 0.3,
                 btn: ['查询', '取消'],
                 yes: function (index) {
                     //oDataTable.ajax.reload();
-                    if($('#sample_number').val()=='' && $("#name").val()=='' && $("#date_blood_range").val()=='' && $("#date_report_range").val()=='' && $("#report_area").val()=="" && $("#province").val()=="" && $("#hospital").val()==""){
+                    if($('#sample_number').val()=='' && $("#name").val()=='' && $("#date_report_range").val()=='' && $("#report_area").val()==""){
                         layer.msg('请输入查询条件！',{time:2000,anim:6,offset:'t'});
                     }else {
                         //alert($('#date_report').val())
@@ -405,123 +316,7 @@
             });
         });
 
-        //新建
-        $("#btnCreate").click(function () {
-            var div=layer.open({
-                type: 2,
-                title: '新建样本',
-                shadeClose: close,
-                maxmin: true,
-                area: ['800px', '600px'],
-                content: "{% url 'NIPT_CreateTable' %}",
-                end: function () {
-                    oDataTable.ajax.reload();
-                }
-            });
-            layer.full(div)
-        });
-
 
     });
-    //刷新
-        $("#btnRefresh").click(function () {
-            window.location.reload();
-        })
-
-    //标准数据导入
-        function standard_upload() {
-            layer.open({
-                type: 2,
-                title: '数据导入',
-                shadeClose: false,
-                maxmin: true,
-                area: ['770px', '300px'],
-                content: ["{% url 'NIPT_StandardImport' %}"],
-                end: function () {
-                    window.location.reload();
-                }
-            });
-        }
-        //Lims数据导入
-    function lims_upload() {
-        layer.open({
-            type: 2,
-            title: '数据导入',
-            shadeClose: false,
-            maxmin: true,
-            area: ['770px', '300px'],
-            content: ["{% url 'NIPT_LimsImport' %}"],
-            end: function () {
-                window.location.reload();
-            }
-        });
-    }
-    //导出模板
-        function btnExportTemplate() {
-            var div=layer.open({
-                type: 2,
-                title: '导出模板',
-                shadeClose: close,
-                maxmin: true,
-                area: ['600px', '370px'],
-                content: "{% url 'NIPT_Template' %}",
-                end: function () {
-                    window.location.reload();
-                }
-            });
-
-        };
-        //修改样本
-        function btnModification(id) {
-            if ($("input[name='checkList']:checked").length == 0){
-                layer.msg("请选择要修改的样本",{time: 2000,anim: 6});
-                return;
-            }else if ($("input[name='checkList']:checked").length > 1){
-                layer.msg("只能选择一个样本进行修改",{time: 2000,anim: 6});
-                return;
-            }else {
-                var arrId = new Array();
-                $("input[name='checkList']:checked").each(function () {
-                    arrId.push($(this).val());
-                });
-
-                var div = layer.open({
-                    type: 2,
-                    title: '样本修改',
-                    shadeClose: false,
-                    maxmin: true,
-                    area: ['800px', '600px'],
-                    content: ["{% url 'NIPT_UpdateTable' %}"+"?id="+arrId[0]],
-                    end: function () {
-                        window.location.reload();
-                    }
-
-                });
-                layer.full(div);
-
-            }
-
-        }
-        //报告日期选择
-        laydate.render({
-            elem: "#date_report_range"
-            ,range: '--'
-            ,theme: '#f09'
-            ,trigger: 'click'
-            ,format: 'yyyy-MM-dd'
-        });
-        //采血时间选择
-        laydate.render({
-            elem: "#date_blood_range"
-            ,range: "--"
-            ,theme: "#f09"
-            ,trigger: "click"
-            ,format: 'yyyy-MM-dd'
-        })
-    /*$(function () {
-        //初始化select2
-        $(".select2").select2();
-    });*/
-
     </script>
 {% endblock %}

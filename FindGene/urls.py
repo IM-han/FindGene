@@ -22,7 +22,7 @@ from django.views.static import serve
 from system.views import SystemView
 from NIPT.views import NIPTView
 from NIPT.views import NIPTDataImportView
-from NIPT.views import NIPTDataTableView, NIPTCreateView, NIPTDataStandardImportView, NIPTDataLimsImportView,NIPTExportTemplateView
+from NIPT.views import NIPTDataTableView, NIPTCreateView, NIPTDataStandardImportView, NIPTDataLimsImportView,NIPTExportTemplateView, NIPTDeleteView, NIPTUpdateView, NIPTReportView
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('', IndexView.as_view(), name='index'),
@@ -36,6 +36,10 @@ urlpatterns = [
     path('NIPT/DataImport/NIPTDataStandardImport', NIPTDataStandardImportView.as_view(), name='NIPT_StandardImport'),
     path('NIPT/DataImport/NIPTDataLimsImport', NIPTDataLimsImportView.as_view(), name="NIPT_LimsImport"),
     path('NIPT/DataImport/NIPTDataTemplate', NIPTExportTemplateView.as_view(), name="NIPT_Template"),
+    path('NIPT/DataImport/NIPTDelete', NIPTDeleteView.as_view(), name="NIPT_Delete"),
+    path('NIPT/DataImport/UpdateTable', NIPTUpdateView.as_view(), name='NIPT_UpdateTable'),
+    #Report
+    path('NIPT/ReportCheck/', NIPTReportView.as_view(), name='NIPT_Report'),
 ]
 
 if settings.DEBUG:

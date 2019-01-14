@@ -11,22 +11,23 @@
 <div class="box box-danger">
 <form class="form-horizontal" id="addForm" method="post">
     {% csrf_token %}
-    <!--<input type="hidden" name="proposer" value="{{ request.user.id }}">-->
+    <input type="hidden" name="person_import" value="{{ request.user.username }}">
     <div class="box-body">
         <fieldset>
             <div class="form-group has-feedback">
                 <label class="col-sm-2 control-label"><strong style="color:#F00">*</strong> 样本编号</label>
                 <div class="col-sm-3">
-                    <input class="form-control" name="sample_number"  value="{{ NIPTImportData.sample_number }}" type="text">
+                    <input class="form-control" name="sample_number"  value="{{ NIPTData.sample_number }}" type="text">
                 </div>
                 <label class="col-sm-2 control-label"><strong style="color:#F00">*</strong>报告地区</label>
                 <div class="col-sm-3">
                     <select class="form-control select2" style="width: 100%;" name="report_area">
-                        <option value="{{ NIPTImportData.report_area }}">
-                            {{ NIPTImportData.get_report_area_display }}
+                        <option value="{{ NIPTData.report_area }}">
+                            {{ NIPTData.get_report_area_display }}
                         </option>
                         {% for area in area_list %}
-                            <option value="{{ area.item }}">{{ area.value }}</option>
+                            <!--<option value="{{ area.value }}">{{ area.value }}</option>-->
+                            <option value="{{ area.item }}" {% if area.item == "成都" %}selected {% endif %}>{{ area.value }}</option>
                         {% endfor %}
                     </select>
                 </div>
@@ -35,102 +36,102 @@
                 <label class="col-sm-2 control-label"><strong style="color:#F00">*</strong>检测结果</label>
                 <div class="col-sm-3">
                     <select class="form-control select2" style="width: 100%;" name="result">
-                        <option value="{{ NIPTImportData.result }}">
-                            {{ NIPTImportData.get_result_display }}
+                        <option value="{{ NIPTData.result }}">
+                            {{ NIPTData.get_result_display }}
                         </option>
                         {% for result in result_list %}
-                            <option value="{{ result.item }}">{{ result.value }}</option>
+                            <option value="{{ result.item }}" {% if result.item == "未见异常" %} selected {% endif %}>{{ result.value }}</option>
                         {% endfor %}
                     </select>
                 </div>
                 <label class="col-sm-2 control-label"><strong style="color:#F00">*</strong>T13</label>
                 <div class="col-sm-3">
-                    <input class="form-control" name="T13"  value="{{ NIPTImportData.T13 }}" type="text">
+                    <input class="form-control" name="T13"  value="{{ NIPTData.T13 }}" type="text">
                 </div>
             </div>
             <div class="form-group has-feedback">
                 <label class="col-sm-2 control-label"><strong style="color:#F00">*</strong>T18</label>
                 <div class="col-sm-3">
-                    <input class="form-control" name="T18"  value="{{ NIPTImportData.T18 }}" type="text">
+                    <input class="form-control" name="T18"  value="{{ NIPTData.T18 }}" type="text">
                 </div>
                 <label class="col-sm-2 control-label"><strong style="color:#F00">*</strong>T21</label>
                 <div class="col-sm-3">
-                    <input class="form-control" name="T21"  value="{{ NIPTImportData.T21 }}" type="text">
+                    <input class="form-control" name="T21"  value="{{ NIPTData.T21 }}" type="text">
                 </div>
             </div>
             <div class="form-group has-feedback">
                 <label class="col-sm-2 control-label"><strong style="color:#F00">*</strong>报告时间</label>
                 <div class="col-sm-3">
-                    <input type="text" class="form-control pull-right form_datetime" name="date_report" value="{{ NIPTImportData.date_report |date:'Y-m-d' }}">
+                    <input type="text" class="form-control pull-right form_datetime" name="date_report" value="{{ NIPTData.date_report |date:'Y-m-d' }}" autocomplete="off">
                 </div>
                 <label class="col-sm-2 control-label"><strong style="color:#F00">*</strong>采血时间</label>
                 <div class="col-sm-3">
-                    <input type="text" class="form-control pull-right form_datetime" name="date_blood" value="{{ NIPTImportData.date_blood |date:'Y-m-d' }}">
+                    <input type="text" class="form-control pull-right form_datetime" name="date_blood" value="{{ NIPTData.date_blood |date:'Y-m-d' }}">
                 </div>
             </div>
             <div class="form-group has-feedback">
                 <label class="col-sm-2 control-label"><strong style="color:#F00">*</strong>孕妇姓名</label>
                 <div class="col-sm-3">
-                    <input class="form-control" name="name"  value="{{ NIPTImportData.name }}" type="text">
+                    <input class="form-control" name="name"  value="{{ NIPTData.name }}" type="text">
                 </div>
                 <label class="col-sm-2 control-label"><strong style="color:#F00">*</strong>孕妇年龄</label>
                 <div class="col-sm-3">
-                    <input class="form-control" name="age"  value="{{ NIPTImportData.age }}" type="text">
+                    <input class="form-control" name="age"  value="{{ NIPTData.age }}" type="text">
                 </div>
             </div>
             <div class="form-group has-feedback">
                 <label class="col-sm-2 control-label">孕周</label>
                 <div class="col-sm-3">
-                    <input class="form-control" name="gestation_weeks" value="{{ NIPTImportData.gestation_weeks }}" type="text">
+                    <input class="form-control" name="gestation_weeks" value="{{ NIPTData.gestation_weeks }}" type="text">
                 </div>
                 <label class="col-sm-2 control-label">末次月经</label>
                 <div class="col-sm-3">
-                    <input type="text" class="form-control pull-right form_datetime" name="date_blood" value="{{ NIPTImportData.last_menstrual |date:'Y-m-d H:m:s' }}">
+                    <input type="text" class="form-control pull-right form_datetime" name="last_menstrual" value="{{ NIPTData.last_menstrual |date:'Y-m-d' }}">
                 </div>
             </div>
             <div class="form-group has-feedback">
                 <label class="col-sm-2 control-label" >单双胎</label>
                 <div class="col-sm-3">
                     <select class="form-control select2" style="width: 100%;" name="fetus_num">
-                        <option value="{{ NIPTImportData.fetus_number }}">
-                            {{ NIPTImportData.get_fetus_number_display }}
+                        <option value="{{ NIPTData.fetus_number }}">
+                            {{ NIPTData.get_fetus_number_display }}
                         </option>
                         {% for fetus_num in fetus_num_list %}
-                            <option value="{{ fetus_num.item }}">{{ fetus_num.value }}</option>
+                            <option value="{{ fetus_num.item }}" {% if fetus_num.item == "单胎" %} selected {% endif %}>{{ fetus_num.value }}</option>
                         {% endfor %}
                     </select>
                 </div>
                 <label class="col-sm-2 control-label">试管婴儿</label>
                 <div class="col-sm-3">
                     <label class="checkbox-inline" id="tube_baby">
-                        <input type="radio" name="baby" value="0" checked>否
-                        <input type="radio" name="baby" value="1">是
+                        <input type="radio" name="baby" value="否" checked>否
+                        <input type="radio" name="baby" value="是">是
                     </label>
                 </div>
             </div>
             <div class="form-group has-feedback">
                 <label class="col-sm-2 control-label">联系方式</label>
                 <div class="col-sm-3">
-                    <input class="form-control" name="telephone" value="{{ NIPTImportData.telephone }}" type="text">
+                    <input class="form-control" name="telephone" value="{{ NIPTData.telephone }}" type="text">
                 </div>
                 <label class="col-sm-2 control-label">妊娠史</label>
                 <div class="col-sm-3">
-                    <input class="form-control" name="preghistory" value="{{ NIPTImportData.preghistorty }}" type="text">
+                    <input class="form-control" name="preghistory" value="{{ NIPTData.preghistorty }}" type="text">
                 </div>
             </div>
             <div class="form-group has-feedback">
                 <label class="col-sm-2 control-label">21号唐筛值</label>
                 <div class="col-sm-3">
-                    <input class="form-control" name="DS21_value" value="{{ NIPTImportData.DS21_value }}">
+                    <input class="form-control" name="DS21_value" value="{{ NIPTData.DS21_value }}">
                 </div>
                 <label class="col-sm-2 control-label">21号唐筛结果</label>
                 <div class="col-sm-3">
                     <select class="form-control select2" style="width: 100%;" name="DS21_result">
-                        <option value="{{ NIPTImportData.DS21_result }}">
-                            {{ NIPTImportData.get_DS21_result_display }}
+                        <option value="{{ NIPTData.DS21_result }}">
+                            {{ NIPTData.get_DS21_result_display }}
                         </option>
                         {% for DS21 in DS_result_list %}
-                            <option value="{{ DS21.item }}">{{ DS21.value }}</option>
+                            <option value="{{ DS21.item }}" {% if DS21.item == "null"%} selected {% endif %}>{{ DS21.value }}</option>
                         {% endfor %}
                     </select>
                 </div>
@@ -138,16 +139,16 @@
             <div class="form-group has-feedback">
                 <label class="col-sm-2 control-label">18号唐筛值</label>
                 <div class="col-sm-3">
-                    <input class="form-control" name="DS18_value" value="{{ NIPTImportData.DS18_value }}">
+                    <input class="form-control" name="DS18_value" value="{{ NIPTData.DS18_value }}">
                 </div>
                 <label class="col-sm-2 control-label">18号唐筛结果</label>
                 <div class="col-sm-3">
                     <select class="form-control select2" style="width: 100%;" name="DS18_result">
-                        <option value="{{ NIPTImportData.DS18_result }}">
-                            {{ NIPTImportData.get_DS18_result_display }}
+                        <option value="{{ NIPTData.DS18_result }}">
+                            {{ NIPTData.get_DS18_result_display }}
                         </option>
                         {% for DS18 in DS_result_list %}
-                            <option value="{{ DS18.item }}">{{ DS18.value }}</option>
+                            <option value="{{ DS18.item }}" {% if DS18.item == "null" %} selected {% endif %}>{{ DS18.value }}</option>
                         {% endfor %}
                     </select>
                 </div>
@@ -156,17 +157,17 @@
                 <label class="col-sm-2 control-label">其他唐筛结果</label>
                 <div class="col-sm-3">
                     <select class="form-control select2" style="width: 100%;" name="DSother_result">
-                        <option value="{{ NIPTImportData.DSother_result }}">
-                            {{ NIPTImportData.get_DSother_result_display }}
+                        <option value="{{ NIPTData.DSother_result }}">
+                            {{ NIPTData.get_DSother_result_display }}
                         </option>
                         {% for DSother in DS_result_list %}
-                            <option value="{{ DSother.item }}">{{ DSother.value }}</option>
+                            <option value="{{ DSother.item }}" {% if DSother.item == "null" %} selected {% endif %}>{{ DSother.value }}</option>
                         {% endfor %}
                     </select>
                 </div>
                 <label class="col-sm-2 control-label">省区</label>
                 <div class="col-sm-3">
-                    <input class="form-control" name="province" value="{{ NIPTImportData.province }}" type="text">
+                    <input class="form-control" name="province" value="{{ NIPTData.province }}" type="text">
                 </div>
             </div>
             <div class="form-group has-feedback">
@@ -223,7 +224,8 @@
                         parent.layer.closeAll();
                     });
                 }else if(msg.status == 'fail'){
-                    layer.alert(msg.NewDataForm_Errors, {icon: 5});
+                    layer.alert(msg.NewDataForm_errors, {icon: 5});
+                    //alert(msg.NewDataForm_errors);
                 }
                 return;
             }
@@ -232,7 +234,7 @@
     //重置页面
     $("#btnCancel").click(function () {
         window.location.reload();
-    })
+    });
     //input 时间
     $(".form_datetime").datetimepicker({
         language: 'zh',
@@ -240,6 +242,8 @@
         todayHighlight: 1,
         forceParse: 0,
         showMeridian: 1,
+        format: 'yyyy-mm-dd',
+        minView: 'month',
     }).on('changDate', function (ev) {
         $(this).datetimepicker('hide');
     });

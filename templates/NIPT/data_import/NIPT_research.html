@@ -1,0 +1,27 @@
+{% extends 'base-layer.html' %}
+{% load staticfiles %}
+
+{% block css %}
+    <link rel="stylesheet" href="{% static 'plugins/select2/select2.min.css' %}">
+    <link rel="stylesheet" href="{% static 'js/plugins/layer/skin/layer.css' %}">
+    <link rel="stylesheet" href="{% static 'bootstrap/css/bootstrap-datetimepicker.min.css' %}">
+{% endblock %}
+
+{% block main %}
+    <div class="box box-danger">
+    <form class="form-horizontal" id="researchForm" method="post">
+        <div class="box-body">
+            <fieldset>
+                <label class="col-sm-2 control-label">样本编号</label>
+                <div class="col-sm-3">
+                    <input class="form-control" name="sample_number" type="text">
+                </div>
+                <label class="col-sm-2 control-label">孕妇姓名</label>
+                <div class="col-sm-3">
+                    <input class="form-control" name="name" type="text">
+                </div>
+            </fieldset>
+        </div>
+    </form>
+    </div>
+{% endblock %}
