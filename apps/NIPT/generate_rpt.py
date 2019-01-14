@@ -15,6 +15,7 @@ pdfmetrics.registerFont(TTFont('simsun', 'simsun.ttf'))
 from reportlab.lib.styles import getSampleStyleSheet
 from reportlab.lib import colors
 from reportlab.platypus import SimpleDocTemplate, Paragraph, Spacer, Image, Table, TableStyle
+from reportlab.graphics.shapes import Drawing
 from reportlab.lib.pagesizes import A4
 import time
 
@@ -30,7 +31,7 @@ def generate_rpt():
               fontName='simhei',
               fontSize=11,)  # leading 设置行间距11+11/2为1.5倍行间距
     body_new = PS(name='body',
-              leading=33,
+              leading=16.5,
               fontName='simhei',
               fontSize=11,)
     # 标题
@@ -69,7 +70,11 @@ def generate_rpt():
 
     result_desc = Paragraph('''结果描述：提示胎儿21三体、18三体、13三体的风险均为低风险，建议遗传咨询、定期产前检查。''', body)
     other_tips = Paragraph('''其他提示：无''', body)
-    checker = Paragraph("检测者：审核者：报告日期：", body_new)
+    #checker = Paragraph("检测者：审核者：报告日期：", body_new)
+    checker = Image('SD_checker.png')
+    checker.drawHeight = 40
+    checker.drawWidth = 60
+    detector = Image('SD_detector.png', width=60, height=40)
     suggestion_and_explaination = Paragraph('''建议与解释：''', body)
     content = ListFlowable([Paragraph('''本报告的检测结果只对本次送检的样本负责。''', body),
                             Paragraph('''本报告仅针对21三体综合征、18三体综合征和13三体综合征3种常见胎儿染色体异常。''', body),
@@ -86,7 +91,6 @@ def generate_rpt():
                    ['13号染色体', '-0.260', '-3～+3', '三体低风险'],
                    [[result_desc, other_tips]],
                    [[suggestion_and_explaination, content]],
-                   [checker],
                    ]
     result_table = Table(result_data, colWidths=[117, 117, 117, 116])
 
@@ -96,12 +100,27 @@ def generate_rpt():
         ('GRID', (0, 0), (-1, -1), 0.5, colors.black),
         ('ALIGN', (0, 0), (-1, 3), 'CENTER'),
         ('VALIGN', (0, 0), (-1, 3), 'MIDDLE'),
-        ('ALIGN', (0, -1), (-1, -1), 'CENTER'),
+        ('ALIGN', (0, -1), (0, -1), 'CENTER'),
         ('SPAN', (0, 4), (-1, 4)),
         ('SPAN', (0, 5), (-1, 5)),
         ('SPAN', (0, -1), (-1, -1)),
     ]))
     story.append(result_table)
+    # 添加检测者一栏
+    new_data = [['检测者：', detector, '审核者：', checker, '报告日期：', '2019年01月09日']]
+    new_table = Table(new_data, colWidths=[70, 86, 70, 85, 70, 86])
+    new_table.setStyle(TableStyle([
+        ('FONTNAME', (0, 0), (-1, -1), 'simhei'),
+        ('FONTSIZE', (0, 0), (-1, -1), 11),
+        # ('GRID', (0, 0), (-1, -1), 0.5, colors.black),
+        ('ALIGN', (0, 0), (-1, -1), 'CENTER'),
+        ('VALIGN', (0, 0), (-1, -1), 'MIDDLE'),
+        ('LINEBEFORE', (0, 0), (0, 0), 0.5, colors.black),  # 添加左边线
+        ('LINEAFTER', (-1, 0), (-1, 0), 0.5, colors.black),  # 添加右边线
+        ('LINEBELOW', (0, 0), (-1, -1), 1, colors.black),  # 添加下边线
+
+    ]))
+    story.append(new_table)
     #服务电话
     #telephone = Paragraph("<para fontSize=9><br/><font face='simsun'>服务电话：4006-830-321</font></para>", body)
     #story.append(telephone)
@@ -109,7 +128,7 @@ def generate_rpt():
     #rpt.build(story)
     return story
 
-class FooterCanvas(Canvas):
+class Header_and_FooterCanvas(Canvas):
     def __init__(self, *args, **kwargs):
         Canvas.__init__(self, *args, **kwargs)
         self.pages = []
@@ -140,17 +159,17 @@ class FooterCanvas(Canvas):
         #self.drawString(A4[0]-x, 65, page)
         self.drawString(66, 65, foot)
         header = "检测基因 关爱未来 让世界不再缺陷"
-        logo = Paragraph("<img src='%s' width='%d' height='%d'/>" % ("shangdong_logo.png", 35, 20), PS(name='body'))
-
+        #logo = Paragraph("<img src='%s' width='%d' height='%d'/>" % ("SD_logo.png", 35, 20), PS(name='body'))
+        logo = 'SD_logo.png'
         self.line(66, 780, 530, 780)
         self.drawString(375, 785, header)
-        #self.drawImage(logo, 66, 790,)
-        logo.drawOn(Canvas, 66, 785)
-
+        self.drawImage(logo, 66, 782, width=120, height=25)#在页眉添加logo
+        SD_seal = 'SD_seal.png'
+        self.drawImage(SD_seal, 390, 130, width=100, height=70, mask='auto')
         self.restoreState()
 
 
 if __name__ == "__main__":
     story = generate_rpt()
     rpt = SimpleDocTemplate('shangdongnew.pdf', pageSize=A4)
-    rpt.multiBuild(story, canvasmaker=FooterCanvas)
+    rpt.multiBuild(story, canvasmaker=Header_and_FooterCanvas)
