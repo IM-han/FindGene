@@ -46,7 +46,7 @@ def generate_rpt():
                       ['单胎/双胎/多胎：单胎', '', '试管婴儿：', '否', '样本类型：', '全血'],
                       ['样本状态：合格', '', '联系电话：', '15562576812', '送检医生：', '托尔斯泰']]
     # 创建表格对象，并设定各列宽度
-    component_table = Table(component_data, colWidths=[105, 65, 65, 75, 65, 92])
+    component_table = Table(component_data, colWidths=[110, 70, 70, 80, 70, 99])
     # 添加表格样式
     component_table.setStyle(TableStyle([
         ('FONTNAME', (0, 0), (-1, -1), 'simhei'),  # 字体
@@ -81,7 +81,7 @@ def generate_rpt():
                             Paragraph('''该技术不适用的检测孕妇人群为：孕周<12<super>+0</super>周；夫妇有一方有明确染色体异常；1年内接受过异体输血、移植手术、异体细胞治疗等；胎儿超声检查提示有结构异常须进行产前诊断；有基因遗传病家族史或提示胎儿罹患基因病高风险；孕妇合并恶性肿瘤；医师认为有明显影响结果准确性的其他情形。''', body),
                             Paragraph("鉴于当前医学技术发展水平和孕妇个体差异等因素，即使在检测人员已经履行了工作职责和操作规程的前提下，仍有可能出现假阳性和假阴性结果。", body),
                             Paragraph("本检测结果不作为产前诊断结果。如检测结果为高风险，建议受检者接受遗传咨询及相应性产前诊断；如检测结果为未见异常，说明胎儿罹患本检测目标疾病的风险很低，但不排除其他异常的可能性，应当进行胎儿系统超声等其他检查。", body),
-                            Paragraph("医疗机构不承担因孕妇提供信息资料不实而导致检测结果不准确的责任。", body)], bulletType='1')
+                            Paragraph("医疗机构不承担因孕妇提供信息资料不实而导致检测结果不准确的责任。<br/><br/>", body)], bulletType='1')
 
 
 
@@ -92,7 +92,7 @@ def generate_rpt():
                    [[result_desc, other_tips]],
                    [[suggestion_and_explaination, content]],
                    ]
-    result_table = Table(result_data, colWidths=[117, 117, 117, 116])
+    result_table = Table(result_data, colWidths=[125, 125, 125, 124])
 
     result_table.setStyle(TableStyle([
         ('FONTNAME', (0, 0), (-1, -1), 'simhei'),
@@ -104,11 +104,12 @@ def generate_rpt():
         ('SPAN', (0, 4), (-1, 4)),
         ('SPAN', (0, 5), (-1, 5)),
         ('SPAN', (0, -1), (-1, -1)),
+        ('BACKGROUND', (0, 0), (-1, 0), colors.HexColor("#4682B4")),
     ]))
     story.append(result_table)
     # 添加检测者一栏
     new_data = [['检测者：', detector, '审核者：', checker, '报告日期：', '2019年01月09日']]
-    new_table = Table(new_data, colWidths=[70, 86, 70, 85, 70, 86])
+    new_table = Table(new_data, colWidths=[75, 91, 75, 90, 75, 93])
     new_table.setStyle(TableStyle([
         ('FONTNAME', (0, 0), (-1, -1), 'simhei'),
         ('FONTSIZE', (0, 0), (-1, -1), 11),
@@ -153,23 +154,23 @@ class Header_and_FooterCanvas(Canvas):
         self.setStrokeColorRGB(0, 0, 0)
         self.setLineWidth(0.25)
         #self.line(66, 78, A4[0] - 66, 78)
-        self.line(66, 78, 530, 78)
+        #self.line(66, 78, 530, 78) #页脚横线
         #print(A4[0],A4)
         self.setFont('simsun', 9)
         #self.drawString(A4[0]-x, 65, page)
-        self.drawString(66, 65, foot)
+        self.drawString(48, 65, foot)
         header = "检测基因 关爱未来 让世界不再缺陷"
-        #logo = Paragraph("<img src='%s' width='%d' height='%d'/>" % ("SD_logo.png", 35, 20), PS(name='body'))
-        logo = 'SD_logo.png'
-        self.line(66, 780, 530, 780)
-        self.drawString(375, 785, header)
-        self.drawImage(logo, 66, 782, width=120, height=25)#在页眉添加logo
+        logo = 'LOGO.png'
+        self.line(48, 780, 548, 780)
+        self.drawString(393, 785, header)
+        self.drawImage(logo, 48, 782, width=100, height=40)#在页眉添加logo
         SD_seal = 'SD_seal.png'
-        self.drawImage(SD_seal, 390, 130, width=100, height=70, mask='auto')
+        self.drawImage(SD_seal, 399, 130, width=100, height=70, mask='auto')#印章
         self.restoreState()
+
 
 
 if __name__ == "__main__":
     story = generate_rpt()
-    rpt = SimpleDocTemplate('shangdongnew.pdf', pageSize=A4)
+    rpt = SimpleDocTemplate('shangdongnew.pdf', pageSize=A4, rightMargin=48, leftMargin=48)
     rpt.multiBuild(story, canvasmaker=Header_and_FooterCanvas)
